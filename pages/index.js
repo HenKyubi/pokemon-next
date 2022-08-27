@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
+//API
+import { getInitialPokemons } from "../pages/api/index";
+
 //Lotties
 import Lottie from "react-lottie";
 import pokeballLoading from "../public/lotties/pikachu.json";
@@ -11,13 +14,13 @@ import Loading from "../components/loading";
 import Navbar from "../components/navbar";
 import PokemonList from "../components/pokemon-list";
 import PokemonCard from "../components/pokemon-card";
+import FilterType from "../components/filter-type";
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [pokemonList, setPokemonList] = useState([]);
   const switchLoading = () => {
     setTimeout(() => setLoading(!loading), 5000);
   };
-  useEffect(() => switchLoading(), null);
 
   const styles = {
     height: "100vh",
@@ -34,6 +37,22 @@ export default function Home() {
     },
   };
 
+  const fetchInitialPokemons = async () => {
+    try {
+      const data = await getInitialPokemons();
+      
+      setPokemonList(data);
+    } catch (err) {
+      console.log("err fetchInitialPokemons", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchInitialPokemons();
+    // switchLoading();
+    // console.log(getInitialPokemons());
+  },[]);
+
   return (
     <>
       <Head>
@@ -45,14 +64,19 @@ export default function Home() {
       <div className="container" style={styles}>
         <Navbar />
         <div className="row m-0 p-0 h-100 w-100">
-          <div className="col-3  m-0 p-0 h-100">filters</div>
+          <div className="col-3  m-0 p-0 h-100">{/* <FilterType /> */}</div>
           <div className="col-9 m-0 p-0 ">
-            <PokemonList>
+            {/* <PokemonList> */}
+            <div className="row m-0 p-0 w-100 h-100">
               {pokemonList.length > 0 ? (
-                pokemonList.map((pokemon) => {
-                  return <div key={pokemon.id}>{pokemon}</div>;
-                  // return <PokemonCard pokemonData={pokemon} key={pokemon.id} />;
-                })
+                pokemonList.map(
+                  (pokemon,ind) => {
+                    console.log(pokemon.idPokemon);
+                    return(
+                    <PokemonCard pokemonData={pokemon} key={ind} />
+                  )}
+                  // return ;
+                )
               ) : (
                 <div className="d-flex flex-column align-items-center h-100 w-100 pt-5">
                   <span>No found Pokemon</span>
@@ -61,7 +85,8 @@ export default function Home() {
                   </div>
                 </div>
               )}
-            </PokemonList>
+              {/* </PokemonList> */}
+            </div>
           </div>
         </div>
         {/* <div className="col-12 col-md-3">
