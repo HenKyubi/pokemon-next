@@ -1,23 +1,30 @@
+import React from "react";
 import { useEffect, useState } from "react";
+import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.css";
 
 //API
-import { getInitialPokemons } from "../pages/api/index";
+import { getInitialPokemons } from "./api/index";
 
 //Lotties
 import Lottie from "react-lottie";
 import pokeballLoading from "../public/lotties/pikachu.json";
 
 //  Components
-import Head from "next/head";
 import Loading from "../components/loading";
 import Navbar from "../components/navbar";
 import PokemonList from "../components/pokemon-list";
 import PokemonCard from "../components/pokemon-card";
 import FilterType from "../components/filter-type";
+
+interface Pokemon {
+  idPokemon: number;
+  namePokemon: String;
+};
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
-  const [pokemonList, setPokemonList] = useState([]);
+  const [pokemonList, setPokemonList] = useState(Array<Pokemon>);
   const switchLoading = () => {
     setTimeout(() => setLoading(!loading), 5000);
   };
@@ -40,7 +47,6 @@ export default function Home() {
   const fetchInitialPokemons = async () => {
     try {
       const data = await getInitialPokemons();
-      
       setPokemonList(data);
     } catch (err) {
       console.log("err fetchInitialPokemons", err);
@@ -51,7 +57,7 @@ export default function Home() {
     fetchInitialPokemons();
     // switchLoading();
     // console.log(getInitialPokemons());
-  },[]);
+  }, []);
 
   return (
     <>
@@ -61,6 +67,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
       {/* {loading && <Loading />} */}
+      
+      
       <div className="container" style={styles}>
         <Navbar />
         <div className="row m-0 p-0 h-100 w-100">
@@ -70,11 +78,15 @@ export default function Home() {
             <div className="row m-0 p-0 w-100 h-100">
               {pokemonList.length > 0 ? (
                 pokemonList.map(
-                  (pokemon,ind) => {
-                    console.log(pokemon.idPokemon);
-                    return(
-                    <PokemonCard pokemonData={pokemon} key={ind} />
-                  )}
+                  (pokemon) => {
+                    // console.log(pokemon.idPokemon);
+                    return (
+                      <PokemonCard
+                        pokemonData={pokemon}
+                        key={pokemon.idPokemon}
+                      />
+                    );
+                  }
                   // return ;
                 )
               ) : (
