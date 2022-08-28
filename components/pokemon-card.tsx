@@ -4,12 +4,8 @@ import Image from "next/image";
 import { fetchPokemonDetails } from "../pages/api/index";
 import { PokemonData } from "../interfaces/pokemon-details";
 import { PokemonSpecies } from "../interfaces/pokemon-species";
+import { Pokemon } from "../interfaces/pokemon-interface";
 // import {Pokemon} from "../pages/index"
-
-interface Pokemon {
-  idPokemon: number;
-  namePokemon: String;
-}
 
 interface Props {
   pokemonData: Pokemon;
@@ -53,7 +49,7 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
   const formatedId = formatId(pokemonData.idPokemon);
 
   useEffect(() => {
-    console.log(formatedId);
+    // console.log(formatedId);
   }, [formatedId]);
 
   // useEffect(() => {

@@ -2,9 +2,10 @@ import React from "react";
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.css";
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
 //API
-import { getInitialPokemons } from "./api/index";
+import { getInitialPokemons, getNextPokemons } from "./api/index";
 
 //Lotties
 import Lottie from "react-lottie";
@@ -17,17 +18,19 @@ import PokemonList from "../components/pokemon-list";
 import PokemonCard from "../components/pokemon-card";
 import FilterType from "../components/filter-type";
 
-interface Pokemon {
-  idPokemon: number;
-  namePokemon: String;
-};
+//Interfaces
+import { Pokemon } from "../interfaces/pokemon-interface";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [pokemonList, setPokemonList] = useState(Array<Pokemon>);
+  const [modal, setModal] = useState(false);
+  const [positionOnArray, setPositionOnArray] = useState(43);
   const switchLoading = () => {
     setTimeout(() => setLoading(!loading), 5000);
   };
+
+  const toggle = () => setModal(!modal);
 
   const styles = {
     height: "100vh",
@@ -46,10 +49,24 @@ export default function Home() {
 
   const fetchInitialPokemons = async () => {
     try {
-      const data = await getInitialPokemons();
-      setPokemonList(data);
+      const initialListOfPokemons: Array<Pokemon> = await getInitialPokemons();
+      setPokemonList(initialListOfPokemons);
     } catch (err) {
       console.log("err fetchInitialPokemons", err);
+    }
+  };
+
+  const getNextList = (): void => {
+    const next: Array<Pokemon> = getNextPokemons(positionOnArray);
+    console.log(getNextPokemons(positionOnArray + 1).length);
+    const hasNext: boolean = getNextPokemons(positionOnArray + 1)?.length === 20;
+    if (hasNext) {
+      console.log(true)
+      setPositionOnArray(positionOnArray + 1);
+      setPokemonList(pokemonList.concat(next));
+    } else {
+      setPokemonList(pokemonList.concat(next));
+      setPositionOnArray(0);
     }
   };
 
@@ -67,15 +84,37 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
       {/* {loading && <Loading />} */}
-      
-      
+      <Button color="danger" onClick={() => toggle()}>
+        Click Me
+      </Button>
+      <Modal isOpen={modal} toggle={() => toggle()}>
+        <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+        <ModalBody>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
+        </ModalBody>
+        {/* <ModalFooter>
+          <Button color="primary" onClick={toggle}>
+            Do Something
+          </Button>{" "}
+          <Button color="secondary" onClick={toggle}>
+            Cancel
+          </Button>
+        </ModalFooter> */}
+      </Modal>
+
       <div className="container" style={styles}>
         <Navbar />
         <div className="row m-0 p-0 h-100 w-100">
           <div className="col-3  m-0 p-0 h-100">{/* <FilterType /> */}</div>
           <div className="col-9 m-0 p-0 ">
             {/* <PokemonList> */}
-            <div className="row m-0 p-0 w-100 h-100">
+            <div className="row m-0 p-0 w-100">
               {pokemonList.length > 0 ? (
                 pokemonList.map(
                   (pokemon) => {
@@ -98,6 +137,15 @@ export default function Home() {
                 </div>
               )}
               {/* </PokemonList> */}
+              {/* <div className="d-flex justify-content-center align-items-center h-25"> */}
+              {positionOnArray !== 0 && (
+                <button
+                  onClick={() => {
+                    getNextList();
+                  }}
+                >More Pokemons</button>
+              )}
+              {/* </div> */}
             </div>
           </div>
         </div>
