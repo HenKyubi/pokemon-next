@@ -1,16 +1,14 @@
 import axios from "axios";
 import { PokemonData } from "../../interfaces/pokemon-details";
 import { PokemonSpecies } from "../../interfaces/pokemon-species";
-import { Pokemon } from "../../interfaces/pokemon-interface";
+import { Pokemon, PokemonDetails } from "../../interfaces/types";
 import {
   ResponseAllPokemons,
   PokemonEntry,
 } from "../../interfaces/response-all-pokemons";
-
-interface PokemonDetails {
-  data: PokemonData;
-  species: PokemonSpecies;
-}
+import { ResponseDataPokemon } from "../../interfaces/response-data-pokemon";
+import { ResponseSpeciesPokemon } from "../../interfaces/response-species.pokemon";
+import { ResponseEvolutionChainPokemon } from "../../interfaces/response-evolution-chain-pokemon";
 
 const URL = `https://pokeapi.co/api/v2/`;
 
@@ -22,15 +20,30 @@ const URL = `https://pokeapi.co/api/v2/`;
 export const fetchPokemonDetails = (id: number): Promise<PokemonDetails> => {
   return new Promise<PokemonDetails>(async (resolve, reject) => {
     try {
-      const description: PokemonData = await axios.get(`${URL}pokemon/${id}`)
-        ?.data;
-      console.log(description);
-      const species: PokemonSpecies = await axios.get(
+      const responseDataPokemon: ResponseDataPokemon = await axios.get(
+        `${URL}pokemon/${id}`
+      );
+      const responseSpeciesPokemon: ResponseSpeciesPokemon = await axios.get(
         `${URL}pokemon-species/${id}`
-      )?.data;
+      );
+      const responseEvolutionChainPokemon: ResponseEvolutionChainPokemon =
+        await axios.get(`${URL}evolution-chain/${id}`);
       resolve({
-        data: description,
-        species: species,
+        namePokemon: responseDataPokemon?.data?.name,
+        idPokemon: responseDataPokemon?.data?.id,
+        description:
+          responseSpeciesPokemon?.data?.flavor_text_entries[0]?.flavor_text,
+        height: responseDataPokemon?.data?.height,
+        weight: responseDataPokemon?.data?.weight,
+        category: responseDataPokemon?.data?.types[0]?.type?.name,
+        gender:
+          responseSpeciesPokemon?.data?.gender_rate === -1
+            ? "genderless"
+            : "male - female",
+        habitat: responseSpeciesPokemon?.data?.habitat?.name,
+        color: responseSpeciesPokemon?.data?.color?.name,
+        types: responseDataPokemon?.data?.types?.map((type) => type.type.name),
+        evolution: responseSpeciesPokemon?.data?.evolution_chain?.url,
       });
     } catch (error) {
       reject(error);

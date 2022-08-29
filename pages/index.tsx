@@ -19,13 +19,15 @@ import PokemonCard from "../components/pokemon-card";
 import FilterType from "../components/filter-type";
 
 //Interfaces
-import { Pokemon } from "../interfaces/pokemon-interface";
+import { Pokemon } from "../interfaces/types";
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [pokemonList, setPokemonList] = useState(Array<Pokemon>);
-  const [modal, setModal] = useState(false);
-  const [positionOnArray, setPositionOnArray] = useState(43);
+  // States
+  const [loading, setLoading] = useState<boolean>(true);
+  const [pokemonList, setPokemonList] = useState<Array<Pokemon>>([]);
+  const [modal, setModal] = useState<boolean>(false);
+  const [positionOnArray, setPositionOnArray] = useState<number>(44);
+  const [hasNext, setHasNext] = useState<boolean>(true);
   const switchLoading = () => {
     setTimeout(() => setLoading(!loading), 5000);
   };
@@ -58,15 +60,10 @@ export default function Home() {
 
   const getNextList = (): void => {
     const next: Array<Pokemon> = getNextPokemons(positionOnArray);
-    console.log(getNextPokemons(positionOnArray + 1).length);
-    const hasNext: boolean = getNextPokemons(positionOnArray + 1)?.length === 20;
-    if (hasNext) {
-      console.log(true)
-      setPositionOnArray(positionOnArray + 1);
-      setPokemonList(pokemonList.concat(next));
-    } else {
-      setPokemonList(pokemonList.concat(next));
-      setPositionOnArray(0);
+    setPokemonList([...pokemonList, ...next]);
+    setPositionOnArray(positionOnArray + 1);
+    if (next.length !== 20) {
+      setHasNext(false);
     }
   };
 
@@ -138,12 +135,14 @@ export default function Home() {
               )}
               {/* </PokemonList> */}
               {/* <div className="d-flex justify-content-center align-items-center h-25"> */}
-              {positionOnArray !== 0 && (
+              {hasNext && (
                 <button
                   onClick={() => {
                     getNextList();
                   }}
-                >More Pokemons</button>
+                >
+                  More Pokemons
+                </button>
               )}
               {/* </div> */}
             </div>

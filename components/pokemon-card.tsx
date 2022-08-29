@@ -2,19 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 // import ModalContext from "../context/modal-context"
 import { fetchPokemonDetails } from "../pages/api/index";
-import { PokemonData } from "../interfaces/pokemon-details";
-import { PokemonSpecies } from "../interfaces/pokemon-species";
-import { Pokemon } from "../interfaces/pokemon-interface";
-// import {Pokemon} from "../pages/index"
+import { Pokemon, PokemonDetails } from "../interfaces/types";
 
 interface Props {
   pokemonData: Pokemon;
-}
-
-interface PokemonDetails {
-  data: PokemonData;
-  species: PokemonSpecies;
-  img?: String;
 }
 
 const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
@@ -24,10 +15,11 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
   const PokemonDetails = async () => {
     try {
       if (pokemonData?.idPokemon) {
-        let pokemonDetailsData: PokemonDetails = await fetchPokemonDetails(
+        const pokemonDetailsData: PokemonDetails = await fetchPokemonDetails(
           pokemonData?.idPokemon
         );
-        pokemonDetailsData.img = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatedId}.png`;
+        pokemonDetailsData.imgPokemon = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatedId}.png`;
+        console.log(pokemonDetailsData);
         // setPokemonDetailData(pokemonDetailsData)
       }
     } catch (err) {
@@ -64,7 +56,7 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
         onClick={() => {
-          // PokemonDetails()
+          PokemonDetails()
         }}
       >
         <div className="d-flex justify-content-center w-100">
