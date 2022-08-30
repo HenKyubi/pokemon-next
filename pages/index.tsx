@@ -20,7 +20,7 @@ import FilterType from "../components/filter-type";
 
 //Interfaces
 import { Pokemon } from "../interfaces/interfaces";
-import { AppProvider } from "../context/app-provider";
+import { AppProvider } from "../context/app/app-provider";
 
 export default function Home() {
   // States
@@ -40,26 +40,26 @@ export default function Home() {
     width: "100vw",
   };
 
-  const fetchInitialPokemons = async () => {
-    try {
-      const initialListOfPokemons: Array<Pokemon> = await getInitialPokemons();
-      setPokemonList(initialListOfPokemons);
-    } catch (err) {
-      console.log("err fetchInitialPokemons", err);
-    }
-  };
+  // const fetchInitialPokemons = async () => {
+  //   try {
+  //     const initialListOfPokemons: Array<Pokemon> = await getInitialPokemons();
+  //     setPokemonList(initialListOfPokemons);
+  //   } catch (err) {
+  //     console.log("err fetchInitialPokemons", err);
+  //   }
+  // };
 
-  const getNextList = (): void => {
-    const next: Array<Pokemon> = getNextPokemons(positionOnArray);
-    setPokemonList([...pokemonList, ...next]);
-    setPositionOnArray(positionOnArray + 1);
-    if (next.length !== 20) {
-      setHasNext(false);
-    }
-  };
+  // const getNextList = (): void => {
+  //   const next: Array<Pokemon> = getNextPokemons(positionOnArray);
+  //   setPokemonList([...pokemonList, ...next]);
+  //   setPositionOnArray(positionOnArray + 1);
+  //   if (next.length !== 20) {
+  //     setHasNext(false);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchInitialPokemons();
+    // fetchInitialPokemons();
     // switchLoading();
     // console.log(getInitialPokemons());
   }, []);
@@ -79,7 +79,7 @@ export default function Home() {
           <div className="col-9 m-0 p-0 ">
             <div className="row m-0 p-0 w-100">
               <PokemonList />
-              {hasNext && (
+              {/* {hasNext && (
                 <button
                   onClick={() => {
                     getNextList();
@@ -87,7 +87,7 @@ export default function Home() {
                 >
                   More Pokemons
                 </button>
-              )}
+              )} */}
             </div>
           </div>
         </div>

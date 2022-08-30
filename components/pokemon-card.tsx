@@ -3,6 +3,7 @@ import Image from "next/image";
 // import ModalContext from "../context/modal-context"
 import { fetchPokemonDetails } from "../pages/api/index";
 import { Pokemon, PokemonDetails } from "../interfaces/interfaces";
+import { ModalContext } from "../context/modal/modal-context";
 
 interface Props {
   pokemonData: Pokemon;
@@ -20,6 +21,7 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
         );
         pokemonDetailsData.imgPokemon = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatedId}.png`;
         console.log(pokemonDetailsData);
+        console.log(modalData);
         // setPokemonDetailData(pokemonDetailsData)
       }
     } catch (err) {
@@ -47,6 +49,9 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
   // useEffect(() => {
   //   if (pokemonData?.idPokemon) formatId(JSON.stringify(pokemonData?.idPokemon))
   // }, [pokemonData])
+
+  const { modalState } = useContext(ModalContext);
+  const { modalOpen, modalData } = modalState;
 
   return (
     <div className="col-12 col-md-4 p-2">

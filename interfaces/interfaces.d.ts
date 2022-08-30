@@ -21,11 +21,9 @@ export interface PokemonDetails {
 
 export interface AppState {
   pokemonList: Array<Pokemon>;
-  hasNextList: boolean; 
-
-
-  // setPokemonList: () => {};
-  // setModalOpen: () => {};
+  positionOnArray: number;
+  hasNextList: boolean;
+  filtred: boolean;
 }
 
 export interface ModalState {

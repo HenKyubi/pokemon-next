@@ -10,6 +10,7 @@ import noFoundPokemonLottie from "../public/lotties/pikachu.json";
 //Components
 import PokemonCard from "./pokemon-card";
 import { AppContext } from "../context/app/app-context";
+import { ModalContext } from "../context/modal/modal-context";
 
 // interface Props {
 //   pokemonList: Array<Pokemon>;
@@ -27,6 +28,8 @@ const PokemonList = (): JSX.Element => {
   };
   const {appState} = useContext(AppContext)
   const {pokemonList} = appState
+  
+
   return (
     <div className="w-100 h-100">
       {pokemonList.length > 0 ? (

@@ -1,12 +1,13 @@
 import { useReducer } from "react";
-import { AppState, Pokemon } from "../interfaces/types";
+import { AppState, Pokemon } from "../../interfaces/interfaces";
 import { AppContext } from "./app-context";
 import { AppReducer } from "./app-reducer";
 
 const INITIAL_STATE: AppState = {
   pokemonList: [],
-  modalOpen: false,
-  modalData: undefined
+  positionOnArray: 0,
+  hasNextList: false,
+  filtred: false,
 };
 
 interface Props {
@@ -14,11 +15,12 @@ interface Props {
 }
 export const AppProvider = ({ children }: Props) => {
   const [appState, dispatch] = useReducer(AppReducer, INITIAL_STATE);
-  const toogleModal = () => {
-    dispatch({ type: "toggleModal" });
-  };
   return (
-    <AppContext.Provider value={{ appState   }}>
+    <AppContext.Provider
+      value={{
+        appState,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
