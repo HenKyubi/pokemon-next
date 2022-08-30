@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 // import ModalContext from "../context/modal-context"
 import { fetchPokemonDetails } from "../pages/api/index";
-import { Pokemon, PokemonDetails } from "../interfaces/types";
+import { Pokemon, PokemonDetails } from "../interfaces/interfaces";
 
 interface Props {
   pokemonData: Pokemon;

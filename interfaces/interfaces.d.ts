@@ -3,12 +3,6 @@ export interface Pokemon {
   namePokemon: string;
 }
 
-// export interface PokemonDetails {
-//   data: PokemonData;
-//   species: PokemonSpecies;
-//   img?: string;
-// }
-
 export interface PokemonDetails {
   imgPokemon?: string;
   namePokemon: string;
@@ -23,4 +17,18 @@ export interface PokemonDetails {
   types: Array<string>;
   evolution: string;
   // evolution: Array<string>;
+}
+
+export interface AppState {
+  pokemonList: Array<Pokemon>;
+  hasNextList: boolean; 
+
+
+  // setPokemonList: () => {};
+  // setModalOpen: () => {};
+}
+
+export interface ModalState {
+  modalOpen: boolean;
+  modalData: PokemonDetails;
 }

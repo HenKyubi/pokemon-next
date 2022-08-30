@@ -1,7 +1,7 @@
 import axios from "axios";
 import { PokemonData } from "../../interfaces/pokemon-details";
 import { PokemonSpecies } from "../../interfaces/pokemon-species";
-import { Pokemon, PokemonDetails } from "../../interfaces/types";
+import { Pokemon, PokemonDetails } from "../../interfaces/interfaces";
 import {
   ResponseAllPokemons,
   PokemonEntry,
