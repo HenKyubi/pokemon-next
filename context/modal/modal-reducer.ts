@@ -1,10 +1,12 @@
 import { ModalState, PokemonDetails } from "../../interfaces/interfaces";
 
 type ModalAction =
-  | { type: "setModalPokemonData" }
+  | {
+      type: "setPokemonDataDetails";
+      payload: { pokemonDetailsData: PokemonDetails };
+    }
   | {
       type: "toggleModal";
-      payload: { pokemonDetailsData: PokemonDetails };
     };
 
 export const ModalReducer = (
@@ -14,9 +16,14 @@ export const ModalReducer = (
   switch (action.type) {
     case "toggleModal":
       return {
-        modalOpen: !state.modalOpen,
-        modalData: action.payload.pokemonDetailsData,
+        ...state,
+        modalOpen: !state.modalOpen
       };
+    case "setPokemonDataDetails":
+      return {
+        ...state,
+        pokemonDataDetails: action.payload.pokemonDetailsData
+      }
 
     default:
       return state;

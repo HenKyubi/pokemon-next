@@ -1,8 +1,12 @@
 import { createContext } from "react";
-import { ModalState } from "../../interfaces/interfaces";
+import { ModalState, PokemonDetails } from "../../interfaces/interfaces";
 
 type ModalContextProps = {
-  modalState: ModalState
-}
+  modalState: ModalState;
+  toggleModal: () => void;
+  setPokemonDataDetails: (pokemonDataDetails: PokemonDetails) => void;
+};
 
-export const ModalContext = createContext<ModalContextProps>({} as ModalContextProps);
+export const ModalContext = createContext<ModalContextProps>(
+  {} as ModalContextProps
+);

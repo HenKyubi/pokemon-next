@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import Image from "next/image";
+import Image from "../node_modules/next/image";
 // import ModalContext from "../context/modal-context"
 import { fetchPokemonDetails } from "../pages/api/index";
 import { Pokemon, PokemonDetails } from "../interfaces/interfaces";
@@ -9,26 +9,26 @@ interface Props {
   pokemonData: Pokemon;
 }
 
-const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
-  // const [formatedId, setFormatedId] = useState("")
-  // const { setPokemonDetailData } = useContext(ModalContext)
+const PokemonCard: React.FC<Props> = ({ pokemonData }: Props) => {
+  //Context
+  const { modalState, setPokemonDataDetails, toggleModal } =
+    useContext(ModalContext);
+  const { modalOpen, pokemonDataDetails } = modalState;
 
-  // const PokemonDetails = async () => {
-  //   try {
-  //     if (pokemonData?.idPokemon) {
-  //       const pokemonDetailsData: PokemonDetails = await fetchPokemonDetails(
-  //         pokemonData?.idPokemon
-  //       );
-  //       pokemonDetailsData.imgPokemon = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatedId}.png`;
-  //       console.log(pokemonDetailsData);
-  //       console.log(modalData);
-  //       // setPokemonDetailData(pokemonDetailsData)
-  //     }
-  //   } catch (err) {
-  //     console.log("err", err);
-  //   }
-  // };
-  //  console.log(pokemonData?.idPokemon);
+  const PokemonDetails = async () => {
+    try {
+      if (pokemonData?.idPokemon) {
+        const pokemonDetailsData: PokemonDetails = await fetchPokemonDetails(
+          pokemonData?.idPokemon
+        );
+        pokemonDetailsData.imgPokemon = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatedId}.png`;
+        setPokemonDataDetails(pokemonDetailsData);
+        toggleModal();
+      }
+    } catch (err) {
+      console.log("err", err);
+    }
+  };
 
   const formatId = (id: number): String => {
     if (id < 10) {
@@ -42,17 +42,6 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
 
   const formatedId = formatId(pokemonData.idPokemon);
 
-  useEffect(() => {
-    // console.log(formatedId);
-  }, [formatedId]);
-
-  // useEffect(() => {
-  //   if (pokemonData?.idPokemon) formatId(JSON.stringify(pokemonData?.idPokemon))
-  // }, [pokemonData])
-
-  // const { modalState } = useContext(ModalContext);
-  // const { modalOpen, modalData } = modalState;
-
   return (
     <div className="col-12 col-md-4 p-2">
       <button
@@ -61,7 +50,7 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
         onClick={() => {
-          // PokemonDetails()
+          PokemonDetails();
         }}
       >
         <div className="d-flex justify-content-center w-100">

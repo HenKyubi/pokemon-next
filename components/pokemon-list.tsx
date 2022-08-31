@@ -13,7 +13,7 @@ import noFoundPokemonLottie from "../public/lotties/pikachu.json";
 //Components
 import PokemonCard from "./pokemon-card";
 import { AppContext } from "../context/app/app-context";
-import { ModalContext } from "../context/modal/modal-context";
+
 
 const PokemonList = (): JSX.Element => {
   // Optios to lottie

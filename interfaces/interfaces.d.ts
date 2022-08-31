@@ -28,5 +28,12 @@ export interface AppState {
 
 export interface ModalState {
   modalOpen: boolean;
-  modalData: PokemonDetails;
+  pokemonDataDetails: PokemonDetails;
+}
+
+export interface FilterState {
+  pokemonsBySearch: Array<Pokemon>;
+  pokemonsByColor: Array<Pokemon>;
+  pokemonsByType: Array<Pokemon>;
+  pokemonsByGender: Array<Pokemon>;
 }
