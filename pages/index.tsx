@@ -21,6 +21,7 @@ import FilterType from "../components/filter-type";
 //Interfaces
 import { Pokemon } from "../interfaces/interfaces";
 import { AppProvider } from "../context/app/app-provider";
+import ButtonMorePokemons from "../components/button-more-pokemons";
 
 export default function Home() {
   // States
@@ -79,15 +80,7 @@ export default function Home() {
           <div className="col-9 m-0 p-0 ">
             <div className="row m-0 p-0 w-100">
               <PokemonList />
-              {/* {hasNext && (
-                <button
-                  onClick={() => {
-                    getNextList();
-                  }}
-                >
-                  More Pokemons
-                </button>
-              )} */}
+              <ButtonMorePokemons/>
             </div>
           </div>
         </div>

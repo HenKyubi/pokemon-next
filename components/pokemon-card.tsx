@@ -13,21 +13,21 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
   // const [formatedId, setFormatedId] = useState("")
   // const { setPokemonDetailData } = useContext(ModalContext)
 
-  const PokemonDetails = async () => {
-    try {
-      if (pokemonData?.idPokemon) {
-        const pokemonDetailsData: PokemonDetails = await fetchPokemonDetails(
-          pokemonData?.idPokemon
-        );
-        pokemonDetailsData.imgPokemon = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatedId}.png`;
-        console.log(pokemonDetailsData);
-        console.log(modalData);
-        // setPokemonDetailData(pokemonDetailsData)
-      }
-    } catch (err) {
-      console.log("err", err);
-    }
-  };
+  // const PokemonDetails = async () => {
+  //   try {
+  //     if (pokemonData?.idPokemon) {
+  //       const pokemonDetailsData: PokemonDetails = await fetchPokemonDetails(
+  //         pokemonData?.idPokemon
+  //       );
+  //       pokemonDetailsData.imgPokemon = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${formatedId}.png`;
+  //       console.log(pokemonDetailsData);
+  //       console.log(modalData);
+  //       // setPokemonDetailData(pokemonDetailsData)
+  //     }
+  //   } catch (err) {
+  //     console.log("err", err);
+  //   }
+  // };
   //  console.log(pokemonData?.idPokemon);
 
   const formatId = (id: number): String => {
@@ -50,8 +50,8 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
   //   if (pokemonData?.idPokemon) formatId(JSON.stringify(pokemonData?.idPokemon))
   // }, [pokemonData])
 
-  const { modalState } = useContext(ModalContext);
-  const { modalOpen, modalData } = modalState;
+  // const { modalState } = useContext(ModalContext);
+  // const { modalOpen, modalData } = modalState;
 
   return (
     <div className="col-12 col-md-4 p-2">
@@ -61,7 +61,7 @@ const PokemonCard: React.FC<Props> = ({ pokemonData }) => {
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
         onClick={() => {
-          PokemonDetails()
+          // PokemonDetails()
         }}
       >
         <div className="d-flex justify-content-center w-100">

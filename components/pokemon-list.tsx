@@ -1,7 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
 // Interfaces
 import { Pokemon } from "../interfaces/interfaces";
+
+// API
+import { getInitialPokemons } from "../pages/api/index";
 
 //Lotties
 import Lottie from "react-lottie";
@@ -11,10 +14,6 @@ import noFoundPokemonLottie from "../public/lotties/pikachu.json";
 import PokemonCard from "./pokemon-card";
 import { AppContext } from "../context/app/app-context";
 import { ModalContext } from "../context/modal/modal-context";
-
-// interface Props {
-//   pokemonList: Array<Pokemon>;
-// }
 
 const PokemonList = (): JSX.Element => {
   // Optios to lottie
@@ -26,12 +25,26 @@ const PokemonList = (): JSX.Element => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const {appState} = useContext(AppContext)
-  const {pokemonList} = appState
-  
+
+  //Context
+  const { appState, setPokemonList } = useContext(AppContext);
+  const { pokemonList } = appState;
+
+  const fetchInitialPokemons = async () => {
+    try {
+      const initialListOfPokemons: Array<Pokemon> = await getInitialPokemons();
+      setPokemonList(initialListOfPokemons);
+    } catch (err) {
+      console.log("err fetchInitialPokemons", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchInitialPokemons();
+  }, []);
 
   return (
-    <div className="w-100 h-100">
+    <div className="row m-0 p-0">
       {pokemonList.length > 0 ? (
         pokemonList.map((pokemon) => {
           return <PokemonCard pokemonData={pokemon} key={pokemon.idPokemon} />;
