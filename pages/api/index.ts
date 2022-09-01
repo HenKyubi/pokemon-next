@@ -1,6 +1,4 @@
 import axios from "axios";
-import { PokemonData } from "../../interfaces/pokemon-details";
-import { PokemonSpecies } from "../../interfaces/pokemon-species";
 import { Pokemon, PokemonDetails } from "../../interfaces/interfaces";
 import {
   ResponseAllPokemons,
@@ -9,6 +7,8 @@ import {
 import { ResponseDataPokemon } from "../../interfaces/response-data-pokemon";
 import { ResponseSpeciesPokemon } from "../../interfaces/response-species.pokemon";
 import { ResponseEvolutionChainPokemon } from "../../interfaces/response-evolution-chain-pokemon";
+import { ResponseTypesNames } from "../../interfaces/response-types-names";
+import { ResponseByType } from "../../interfaces/response-by-type";
 
 const URL = `https://pokeapi.co/api/v2/`;
 
@@ -94,11 +94,11 @@ export const getNextPokemons = (positionInList: number): Array<Pokemon> => {
  * get the object in on the type endpoint
  * @returns list of pokemons for type
  */
-export const getFilterNames = () => {
-  return new Promise(async (resolve, reject) => {
+export const getFilterTypeNames = (): Promise<ResponseTypesNames> => {
+  return new Promise<ResponseTypesNames>(async (resolve, reject) => {
     try {
-      const { data } = await axios.get(`${URL}type/`);
-      resolve(data);
+      const responseTypesNames: ResponseTypesNames = await axios.get(`${URL}type/`);
+      resolve(responseTypesNames);
     } catch (error) {
       reject(error);
     }
@@ -197,11 +197,11 @@ export const reOrderFormatted = (
   return pokemonList;
 };
 
-export const getPokemonsInType = (id) => {
-  return new Promise(async (resolve, reject) => {
+export const getPokemonsByType = (id: string): Promise<ResponseByType> => {
+  return new Promise<ResponseByType>(async (resolve, reject) => {
     try {
-      const { data } = await axios.get(`${URL}type/${id}`);
-      resolve(data);
+      const responseByType: ResponseByType = await axios.get(`${URL}type/${id}`);
+      resolve(responseByType);
     } catch (err) {
       reject(err);
     }

@@ -5,7 +5,7 @@ import { getNextPokemons } from "../pages/api/index";
 const ButtonMorePokemons = () => {
   const { appState, setHasNextList, setPokemonList, setPositionOnArray } =
     useContext(AppContext);
-  const { pokemonList, positionOnArray,hasNextList } = appState;
+  const { pokemonList, positionOnArray, hasNextList, filtred } = appState;
 
   const getNextList = (): void => {
     const next: Array<Pokemon> = getNextPokemons(positionOnArray);
@@ -17,7 +17,7 @@ const ButtonMorePokemons = () => {
   };
   return (
     <>
-      {hasNextList && (
+      {hasNextList && !filtred && (
         <button
           onClick={() => {
             getNextList();
