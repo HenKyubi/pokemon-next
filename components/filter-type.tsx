@@ -63,28 +63,66 @@ const FilterType = () => {
 
   const [total, setTotal] = useState(0);
 
-  const getPokemonListByType = async (id) => {
+  const getPokemonListByType = async (id: string): Promise<Array<Pokemon>> => {
     const response = await getPokemonsByType(id);
-    console.log(response);
+    return response.data.pokemon;
   };
 
-  const handleOnChange = (position: number) => {
+  const handleOnChange = async (position: number) => {
+    // Recibe el indice del checkbox que clickeamos
+    console.log("posicion del check clickada");
     console.log(position);
-    const updatedCheckedState = checkedState.map((item, index) =>
-      index === position ? !item : item
-    );
-    console.log(updatedCheckedState);
-    updatedCheckedState.map(async (value, index) => {
-      if (value) {
-        // console.log(resultTypesNames[index].name);
-        const lel: ResponseByType = await getPokemonsByType(
-          resultTypesNames[index].name
-        );
-        console.log(lel.data.pokemon);
-        setPokemonListFiltred([...pokemonListFiltred ,...lel.data.pokemon]);
+
+    // Se mapea el estado array de los chekeados, se crea un nuevo array de checkeados mientras sde busca la posicion clickeada y se niega
+    const updatedCheckedState = checkedState.map((item, index) => {
+      if (index === position) {
+        console.log(item);
+        return !item;
+      } else {
+        return item;
       }
+      // index === position ? !item : item
     });
+    console.log("nuevo array");
+    console.log(updatedCheckedState);
+
+    // se actualiza el estado de los checkeados con el array generado anteriormente
     setCheckedState(updatedCheckedState);
+
+    // Se genera un array con los nombres de los tipos seleccionados
+    const typesChecked: Array<string> = updatedCheckedState
+      .map((value, index) => {
+        if (value) {
+          console.log(resultTypesNames[index].name);
+          return resultTypesNames[index].name;
+        }
+      })
+      .filter((type) => type !== undefined);
+
+    //Se valida si hay checkeados o no
+    if (typesChecked.length > 0) {
+      const pokemonListResults = () =>
+        typesChecked.map(async (value) => {
+          return await getPokemonListByType(value).then((result) =>
+            result.map((pokemon) => {
+              const id = pokemon.pokemon.url.split("/")[6];
+              return {
+                idPokemon: id,
+                namePokemon: pokemon.pokemon.name,
+              };
+            })
+          );
+        });
+
+      console.log(pokemonListResults().);
+
+      // pokemonListResults.map(list=>console.log(list))
+    } else {
+      // setPokemonList(await ge)
+      setPokemonListFiltred([]);
+    }
+
+    // console.log(oh.map);
     // console.log(checkedState)
     // checkedState.map((pos, ind) => {
     //   console.log(pos)
@@ -113,7 +151,7 @@ const FilterType = () => {
   }, [fetchFilterNames]);
   return (
     <div className="gender-filter row mx-3">
-      {pokemonListFiltred.map((lel)=>lel.pokemon.name)}
+      {pokemonListFiltred.map((lel) => lel.pokemon.name)}
       <span className="p-0">Type:</span>
       {resultTypesNames.length > 0 &&
         resultTypesNames.map((resultTypeName, index) => (
