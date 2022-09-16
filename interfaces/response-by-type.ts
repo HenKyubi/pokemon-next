@@ -55,7 +55,7 @@ export interface Data {
   name: string;
   names: Name[];
   past_damage_relations: any[];
-  pokemon: Pokemon[];
+  pokemon: PokemonResult[];
 }
 
 export interface DamageRelations {
@@ -82,7 +82,7 @@ export interface Name {
   name: string;
 }
 
-export interface Pokemon {
+export interface PokemonResult {
   pokemon: Generation;
   slot: number;
 }

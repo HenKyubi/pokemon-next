@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { AppContext } from "../context/app/app-context";
-import { ResponseByType, Pokemon } from "../interfaces/response-by-type";
+import { PokemonResult } from "../interfaces/response-by-type";
 import { ResponseTypesNames, Result } from "../interfaces/response-types-names";
+import { Pokemon } from "../interfaces/interfaces";
 import { getFilterTypeNames, getPokemonsByType } from "../pages/api/index";
 // import FilterContext from "../context/filter-context"
 
@@ -11,9 +12,7 @@ const FilterType = () => {
 
   const [resultTypesNames, setResultTypesNames] = useState<Array<Result>>([]);
   const [checkedState, setCheckedState] = useState<Array<boolean>>([]);
-  const [pokemonListFiltred, setPokemonListFiltred] = useState<Array<Pokemon>>(
-    []
-  );
+  const [isFiltred, setIsFiltred] = useState<boolean>(false);
 
   // const [filtersSelected, setFiltersSelected] = useState([])
   // // const { setFilterType } = useContext(FilterContext)
@@ -28,63 +27,23 @@ const FilterType = () => {
     }
   }, [resultTypesNames.length]);
 
-  // const getPokemonNames = async (types = []) => {
-  //   let newArrayPokemonNames = []
-  //   for (let i = 0; i < types.length; i++) {
-  //     const pokemons = await getPokemonsInType(types[i])
-  //     const pokemonNames = []
-  //     for (let i = 0; i < pokemons.pokemon.length; i++) {
-  //       pokemonNames.push(pokemons.pokemon[i].pokemon.name)
-  //     }
-  //     newArrayPokemonNames.push(...pokemonNames)
-  //   }
-  //   newArrayPokemonNames = removeRepeat(newArrayPokemonNames)
-  //   return newArrayPokemonNames
-  // }
-
-  // const onChange = async id => {
-  //   let selected = filtersSelected
-  //   let find = selected.indexOf(id)
-  //   if (find > -1) {
-  //     selected.splice(find, 1)
-  //   } else {
-  //     selected.push(id)
-  //   }
-  //   setFiltersSelected(selected)
-  //   const selectedNames = await getPokemonNames(selected)
-  //   setFilterType(selectedNames)
-  // }
-
-  const onChange = async (id) => {
-    const lel = await getPokemonsByType(id);
-    console.log(lel);
-    // setPokemonList();
-  };
-
-  const [total, setTotal] = useState(0);
-
-  const getPokemonListByType = async (id: string): Promise<Array<Pokemon>> => {
+  const getPokemonListByType = async (
+    id: string
+  ): Promise<Array<PokemonResult>> => {
     const response = await getPokemonsByType(id);
     return response.data.pokemon;
   };
 
   const handleOnChange = async (position: number) => {
     // Recibe el indice del checkbox que clickeamos
-    console.log("posicion del check clickada");
-    console.log(position);
-
     // Se mapea el estado array de los chekeados, se crea un nuevo array de checkeados mientras sde busca la posicion clickeada y se niega
     const updatedCheckedState = checkedState.map((item, index) => {
       if (index === position) {
-        console.log(item);
         return !item;
       } else {
         return item;
       }
-      // index === position ? !item : item
     });
-    console.log("nuevo array");
-    console.log(updatedCheckedState);
 
     // se actualiza el estado de los checkeados con el array generado anteriormente
     setCheckedState(updatedCheckedState);
@@ -93,7 +52,6 @@ const FilterType = () => {
     const typesChecked: Array<string> = updatedCheckedState
       .map((value, index) => {
         if (value) {
-          console.log(resultTypesNames[index].name);
           return resultTypesNames[index].name;
         }
       })
@@ -101,57 +59,55 @@ const FilterType = () => {
 
     //Se valida si hay checkeados o no
     if (typesChecked.length > 0) {
-      const pokemonListResults = () =>
+      setIsFiltred(true);
+      const getPokemonListsByType: Array<Promise<Array<Pokemon>>> =
         typesChecked.map(async (value) => {
-          return await getPokemonListByType(value).then((result) =>
-            result.map((pokemon) => {
-              const id = pokemon.pokemon.url.split("/")[6];
-              return {
-                idPokemon: id,
-                namePokemon: pokemon.pokemon.name,
-              };
-            })
+          return await getPokemonListByType(value).then(
+            (result): Array<Pokemon> =>
+              //transformar datos recibidos en un pokemon
+              result.map((pokemon): Pokemon => {
+                const id = pokemon.pokemon.url.split("/")[6];
+                return {
+                  idPokemon: parseInt(id),
+                  namePokemon: pokemon.pokemon.name,
+                } as Pokemon;
+              })
           );
         });
+      Promise.all(getPokemonListsByType).then((lists) => {
+        if (lists.length === 1) {
+          setPokemonList(lists[0]);
+        } else {
+          const listOfAll = [...lists.flat()];
 
-      console.log(pokemonListResults().);
+          const search = listOfAll.reduce((acc, pokemon) => {
+            acc[pokemon.namePokemon] = ++acc[pokemon.namePokemon] || 0;
+            return acc;
+          }, {});
 
-      // pokemonListResults.map(list=>console.log(list))
+          const duplicates = listOfAll.filter((pokemon) => {
+            if (search[pokemon.namePokemon] === lists.length - 1) {
+              return search[pokemon.namePokemon];
+            }
+          });
+
+          const set = Array.from(
+            new Set(duplicates.map((item) => JSON.stringify(item)))
+          ).map((pokemon) => JSON.parse(pokemon));
+          setPokemonList(set);
+        }
+      });
     } else {
-      // setPokemonList(await ge)
-      setPokemonListFiltred([]);
+      setIsFiltred(false);
     }
-
-    // console.log(oh.map);
-    // console.log(checkedState)
-    // checkedState.map((pos, ind) => {
-    //   console.log(pos)
-    //   if (pos) {
-    //     const lel = fetch(resultTypesNames[ind].url).then((res)=>console.log(res))
-    //     // console.log(lel)
-    //   }
-    // });
-    // console.log(updatedCheckedState);
-
-    // const totalPrice = updatedCheckedState.reduce(
-    //   (sum, currentState, index) => {
-    //     if (currentState === true) {
-    //       return sum + checkedState[index].price;
-    //     }
-    //     return sum;
-    //   },
-    //   0
-    // );
-
-    // setTotal(totalPrice);
   };
 
   useEffect(() => {
     fetchFilterNames();
   }, [fetchFilterNames]);
+
   return (
     <div className="gender-filter row mx-3">
-      {pokemonListFiltred.map((lel) => lel.pokemon.name)}
       <span className="p-0">Type:</span>
       {resultTypesNames.length > 0 &&
         resultTypesNames.map((resultTypeName, index) => (
