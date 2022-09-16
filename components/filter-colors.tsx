@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { AppContext } from "../context/app/app-context";
 import { Pokemon } from "../interfaces/interfaces";
+import { PokemonSpecy } from "../interfaces/response-by-color";
 import { Result } from "../interfaces/response-color-names";
-import { getColorNames } from "../pages/api/index";
+import { getColorNames, getPokemonsByColor } from "../pages/api/index";
 // import classNames from "classnames";
 // import FilterContext from "../context/filter-context";
 
@@ -17,7 +18,6 @@ const FilterColors = () => {
   const fetchFilterNames = useCallback(async () => {
     try {
       const responseColorNames = await getColorNames();
-      console.log(responseColorNames.data.results);
       setResultColorNames(responseColorNames.data.results);
       setCheckedState(new Array(resultColorNames.length).fill(false));
     } catch (err) {
@@ -25,34 +25,12 @@ const FilterColors = () => {
     }
   }, [resultColorNames.length]);
 
-  // const getPokemonNames = async (types = []) => {
-  //   let newArrayPokemonNames = []
-  //   for (let i = 0; i < types.length; i++) {
-  //     const pokemons = await getPokemonsInColors(types[i])
-  //     const pokemonNames = []
-  //     for (let i = 0; i < pokemons.pokemon_species.length; i++) {
-  //       pokemonNames.push(pokemons.pokemon_species[i].name)
-  //     }
-  //     newArrayPokemonNames.push(...pokemonNames)
-  //   }
-  //   newArrayPokemonNames = newArrayPokemonNames.filter(
-  //     (item, index) => newArrayPokemonNames.indexOf(item) === index
-  //   )
-  //   return newArrayPokemonNames
-  // }
-
-  // const onChange = async id => {
-  //   let selected = colorSelected
-  //   let find = selected.indexOf(id)
-  //   if (find > -1) {
-  //     selected.splice(find, 1)
-  //   } else {
-  //     selected.push(id)
-  //   }
-  //   setColorSelected(selected)
-  //   const selectedNames = await getPokemonNames(selected)
-  //   setFilterColors(selectedNames)
-  // }
+  const getPokemonListByColor = async (
+    id: string
+  ): Promise<Array<PokemonSpecy>> => {
+    const response = await getPokemonsByColor(id);
+    return response.data.pokemon_species;
+  };
 
   const handleOnChange = async (position: number) => {
     // Recibe el indice del checkbox que clickeamos
@@ -68,7 +46,57 @@ const FilterColors = () => {
     // se actualiza el estado de los checkeados con el array generado anteriormente
     setCheckedState(updatedCheckedState);
 
-    
+    // Se genera un array con los nombres de los tipos seleccionados
+    const typesChecked: Array<string> = updatedCheckedState
+      .map((value, index) => {
+        if (value) {
+          return resultColorNames[index].name;
+        }
+      })
+      .filter((type) => type !== undefined);
+
+    //Se valida si hay checkeados o no
+    if (typesChecked.length > 0) {
+      setIsFiltred(true);
+      const getPokemonListsByColor: Array<Promise<Array<Pokemon>>> =
+        typesChecked.map(async (value) => {
+          return await getPokemonListByColor(value).then((result) =>
+            // transformar datos recibidos en un pokemon
+            result.map((pokemon): Pokemon => {
+              const id = pokemon.url.split("/")[6];
+              return {
+                idPokemon: parseInt(id),
+                namePokemon: pokemon.name,
+              } as Pokemon;
+            })
+          );
+        });
+      Promise.all(getPokemonListsByColor).then((lists) => {
+        if (lists.length === 1) {
+          setPokemonList(lists[0]);
+        } else {
+          const listOfAll = [...lists.flat()];
+
+          const search = listOfAll.reduce((acc, pokemon) => {
+            acc[pokemon.namePokemon] = ++acc[pokemon.namePokemon] || 0;
+            return acc;
+          }, {});
+
+          const duplicates = listOfAll.filter((pokemon) => {
+            if (search[pokemon.namePokemon] === lists.length - 1) {
+              return search[pokemon.namePokemon];
+            }
+          });
+
+          const set = Array.from(
+            new Set(duplicates.map((item) => JSON.stringify(item)))
+          ).map((pokemon) => JSON.parse(pokemon));
+          setPokemonList(set);
+        }
+      });
+    } else {
+      setIsFiltred(false);
+    }
   };
 
   useEffect(() => {
@@ -83,32 +111,32 @@ const FilterColors = () => {
         role="group"
         aria-label="Basic checkbox toggle button group"
       > */}
-        {resultColorNames.length > 0 &&
-          resultColorNames.map((resultColorName, index) => (
-            <div key={`color-${index}`} className="form-check col-4">
-              <input
-                type="checkbox"
-                id={`color-${index}`}
-                name={resultColorName?.name}
-                className="form-check-input"
-                value={resultColorName?.name}
-                checked={checkedState[index]}
-                // autoComplete="off"
-                // aria-label={`color-${resultColorName?.name}`}
-                onChange={() => handleOnChange(index)}
-              />
-              <label
-                // className={classNames(`btn ${filter?.name}`, {
-                //   "btn-selected-in-color": colorSelected.includes(filter?.name),
-                // })}
-                // aria-labelledby={`color-${resultColorName?.name}`}
-                className="form-check-label"
-                htmlFor={`color-${index}`}
-              >
-                {resultColorName?.name}
-              </label>
-            </div>
-          ))}
+      {resultColorNames.length > 0 &&
+        resultColorNames.map((resultColorName, index) => (
+          <div key={`color-${index}`} className="form-check col-4">
+            <input
+              type="checkbox"
+              id={`color-${index}`}
+              name={resultColorName?.name}
+              className="form-check-input"
+              value={resultColorName?.name}
+              checked={checkedState[index]}
+              // autoComplete="off"
+              // aria-label={`color-${resultColorName?.name}`}
+              onChange={() => handleOnChange(index)}
+            />
+            <label
+              // className={classNames(`btn ${filter?.name}`, {
+              //   "btn-selected-in-color": colorSelected.includes(filter?.name),
+              // })}
+              // aria-labelledby={`color-${resultColorName?.name}`}
+              className="form-check-label"
+              htmlFor={`color-${index}`}
+            >
+              {resultColorName?.name}
+            </label>
+          </div>
+        ))}
       {/* </div> */}
     </div>
   );

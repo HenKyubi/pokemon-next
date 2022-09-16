@@ -10,6 +10,7 @@ import { ResponseEvolutionChainPokemon } from "../../interfaces/response-evoluti
 import { ResponseTypesNames } from "../../interfaces/response-types-names";
 import { ResponseByType } from "../../interfaces/response-by-type";
 import { ResponseColorNames } from "../../interfaces/response-color-names";
+import { ResponseByColor } from "../../interfaces/response-by-color";
 
 const URL = `https://pokeapi.co/api/v2/`;
 
@@ -98,7 +99,9 @@ export const getNextPokemons = (positionInList: number): Array<Pokemon> => {
 export const getFilterTypeNames = (): Promise<ResponseTypesNames> => {
   return new Promise<ResponseTypesNames>(async (resolve, reject) => {
     try {
-      const responseTypesNames: ResponseTypesNames = await axios.get(`${URL}type/`);
+      const responseTypesNames: ResponseTypesNames = await axios.get(
+        `${URL}type/`
+      );
       resolve(responseTypesNames);
     } catch (error) {
       reject(error);
@@ -113,7 +116,9 @@ export const getFilterTypeNames = (): Promise<ResponseTypesNames> => {
 export const getColorNames = (): Promise<ResponseColorNames> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const responseColorNames : ResponseColorNames = await axios.get(`${URL}pokemon-color/`);
+      const responseColorNames: ResponseColorNames = await axios.get(
+        `${URL}pokemon-color/`
+      );
       resolve(responseColorNames);
     } catch (error) {
       reject(error);
@@ -201,7 +206,9 @@ export const reOrderFormatted = (
 export const getPokemonsByType = (id: string): Promise<ResponseByType> => {
   return new Promise<ResponseByType>(async (resolve, reject) => {
     try {
-      const responseByType: ResponseByType = await axios.get(`${URL}type/${id}`);
+      const responseByType: ResponseByType = await axios.get(
+        `${URL}type/${id}`
+      );
       resolve(responseByType);
     } catch (err) {
       reject(err);
@@ -209,11 +216,13 @@ export const getPokemonsByType = (id: string): Promise<ResponseByType> => {
   });
 };
 
-export const getPokemonsByColor = (id) => {
-  return new Promise(async (resolve, reject) => {
+export const getPokemonsByColor = (id: string): Promise<ResponseByColor> => {
+  return new Promise<ResponseByColor>(async (resolve, reject) => {
     try {
-      const { data } = await axios.get(`${URL}pokemon-color/${id}`);
-      resolve(data);
+      const responseByColor: ResponseByColor = await axios.get(
+        `${URL}pokemon-color/${id}`
+      );
+      resolve(responseByColor);
     } catch (err) {
       reject(err);
     }
