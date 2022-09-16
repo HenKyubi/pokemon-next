@@ -8,6 +8,7 @@ import Navbar from "../components/navbar";
 import PokemonList from "../components/pokemon-list";
 import ButtonMorePokemons from "../components/button-more-pokemons";
 import FilterType from "../components/filter-type";
+import FilterColors from "../components/filter-colors"
 
 // Context
 import { AppProvider } from "../context/app/app-provider";
@@ -37,7 +38,10 @@ export default function Home() {
       <div className="container" style={styles}>
         <Navbar />
         <div className="row m-0 p-0 h-100 w-100">
-          <div className="col-3  m-0 p-0 h-100"><FilterType /></div>
+          <div className="col-3  m-0 p-0 h-100">
+            <FilterType />
+            <FilterColors />
+          </div>
           <div className="col-9 m-0 p-0 ">
             <div className="row m-0 p-0 w-100">
               <ModalProvider>

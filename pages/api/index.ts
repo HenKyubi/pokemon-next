@@ -9,6 +9,7 @@ import { ResponseSpeciesPokemon } from "../../interfaces/response-species.pokemo
 import { ResponseEvolutionChainPokemon } from "../../interfaces/response-evolution-chain-pokemon";
 import { ResponseTypesNames } from "../../interfaces/response-types-names";
 import { ResponseByType } from "../../interfaces/response-by-type";
+import { ResponseColorNames } from "../../interfaces/response-color-names";
 
 const URL = `https://pokeapi.co/api/v2/`;
 
@@ -109,11 +110,11 @@ export const getFilterTypeNames = (): Promise<ResponseTypesNames> => {
  * get the object in on the color endpoint
  * @returns list of pokemons for color
  */
-export const getColorNames = () => {
+export const getColorNames = (): Promise<ResponseColorNames> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { data } = await axios.get(`${URL}pokemon-color/`);
-      resolve(data);
+      const responseColorNames : ResponseColorNames = await axios.get(`${URL}pokemon-color/`);
+      resolve(responseColorNames);
     } catch (error) {
       reject(error);
     }
@@ -208,7 +209,7 @@ export const getPokemonsByType = (id: string): Promise<ResponseByType> => {
   });
 };
 
-export const getPokemonsInColors = (id) => {
+export const getPokemonsByColor = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
       const { data } = await axios.get(`${URL}pokemon-color/${id}`);
