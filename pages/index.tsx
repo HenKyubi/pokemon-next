@@ -9,6 +9,7 @@ import PokemonList from "../components/pokemon-list";
 import ButtonMorePokemons from "../components/button-more-pokemons";
 import FilterType from "../components/filter-type";
 import FilterColors from "../components/filter-colors"
+import FilterGender from "../components/filter-gender";
 
 // Context
 import { AppProvider } from "../context/app/app-provider";
@@ -41,6 +42,7 @@ export default function Home() {
           <div className="col-3  m-0 p-0 h-100">
             <FilterType />
             <FilterColors />
+            <FilterGender />
           </div>
           <div className="col-9 m-0 p-0 ">
             <div className="row m-0 p-0 w-100">

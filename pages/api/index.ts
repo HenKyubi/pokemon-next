@@ -11,6 +11,8 @@ import { ResponseTypesNames } from "../../interfaces/response-types-names";
 import { ResponseByType } from "../../interfaces/response-by-type";
 import { ResponseColorNames } from "../../interfaces/response-color-names";
 import { ResponseByColor } from "../../interfaces/response-by-color";
+import { ResponseGenderNames } from "../../interfaces/response-gender-names";
+import { ResponseByGender } from "../../interfaces/response-by-gender";
 
 const URL = `https://pokeapi.co/api/v2/`;
 
@@ -130,11 +132,11 @@ export const getColorNames = (): Promise<ResponseColorNames> => {
  * get the object in on the gender endpoint
  * @returns list of pokemons for gender
  */
-export const getGenderNames = () => {
+export const getFilterGenderNames = (): Promise<ResponseGenderNames> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { data } = await axios.get(`${URL}gender/`);
-      resolve(data);
+      const responseGenderNames = await axios.get(`${URL}gender/`);
+      resolve(responseGenderNames);
     } catch (error) {
       reject(error);
     }
@@ -229,11 +231,11 @@ export const getPokemonsByColor = (id: string): Promise<ResponseByColor> => {
   });
 };
 
-export const getPokemonsInGender = (id) => {
+export const getPokemonsByGender = (id: string): Promise<ResponseByGender> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { data } = await axios.get(`${URL}gender/${id}`);
-      resolve(data);
+      const responseByGender = await axios.get(`${URL}gender/${id}`);
+      resolve(responseByGender);
     } catch (err) {
       reject(err);
     }
