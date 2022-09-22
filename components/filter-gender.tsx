@@ -10,7 +10,7 @@ import {
 
 const FilterGender = () => {
   // Context
-  const { setPokemonList } = useContext(AppContext);
+  const { setPokemonList, setfiltred } = useContext(AppContext);
 
   //States
   const [resultGenderNames, setResultGenderNames] = useState<Array<Result>>([]);
@@ -61,6 +61,7 @@ const FilterGender = () => {
     //Se valida si hay checkeados o no
     if (typesChecked.length > 0) {
       setIsFiltred(true);
+      setfiltred(true);
       const getPokemonListsByType: Array<Promise<Array<Pokemon>>> =
         typesChecked.map(async (value) => {
           return await getPokemonListByGender(value).then(
@@ -100,6 +101,7 @@ const FilterGender = () => {
       });
     } else {
       setIsFiltred(false);
+      setfiltred(false);
     }
   };
 

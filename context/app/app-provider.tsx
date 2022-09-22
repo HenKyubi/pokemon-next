@@ -24,6 +24,9 @@ export const AppProvider = ({ children }: Props) => {
   const setHasNextList = () => {
     dispatch({ type: "setHasNextList" });
   };
+  const setfiltred = (isFiltred : boolean) => {
+    dispatch({ type: "setFiltred", payload: { isFiltred } });
+  };
   return (
     <AppContext.Provider
       value={{
@@ -31,6 +34,7 @@ export const AppProvider = ({ children }: Props) => {
         setPokemonList,
         setPositionOnArray,
         setHasNextList,
+        setfiltred,
       }}
     >
       {children}

@@ -9,7 +9,7 @@ import { getColorNames, getPokemonsByColor } from "../pages/api/index";
 
 const FilterColors = () => {
   // Context
-  const { setPokemonList } = useContext(AppContext);
+  const { setPokemonList,setfiltred } = useContext(AppContext);
 
   const [resultColorNames, setResultColorNames] = useState<Array<Result>>([]);
   const [checkedState, setCheckedState] = useState<Array<boolean>>([]);
@@ -58,6 +58,7 @@ const FilterColors = () => {
     //Se valida si hay checkeados o no
     if (typesChecked.length > 0) {
       setIsFiltred(true);
+      setfiltred(true);
       const getPokemonListsByColor: Array<Promise<Array<Pokemon>>> =
         typesChecked.map(async (value) => {
           return await getPokemonListByColor(value).then((result) =>
@@ -96,6 +97,7 @@ const FilterColors = () => {
       });
     } else {
       setIsFiltred(false);
+      setfiltred(false);
     }
   };
 
@@ -113,7 +115,7 @@ const FilterColors = () => {
       > */}
       {resultColorNames.length > 0 &&
         resultColorNames.map((resultColorName, index) => (
-          <div key={`color-${index}`} className="form-check col-4">
+          <div key={`color-${index}`} className="form-check col-6">
             <input
               type="checkbox"
               id={`color-${index}`}

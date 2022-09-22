@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Head from "next/head";
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -8,13 +8,14 @@ import Navbar from "../components/navbar";
 import PokemonList from "../components/pokemon-list";
 import ButtonMorePokemons from "../components/button-more-pokemons";
 import FilterType from "../components/filter-type";
-import FilterColors from "../components/filter-colors"
+import FilterColors from "../components/filter-colors";
 import FilterGender from "../components/filter-gender";
 
 // Context
 import { AppProvider } from "../context/app/app-provider";
 import { ModalProvider } from "../context/modal/modal-provider";
 import PokemonModal from "../components/pokemon-modal";
+import { AppContext } from "../context/app/app-context";
 
 export default function Home() {
   // const switchLoading = () => {
@@ -27,6 +28,9 @@ export default function Home() {
     height: "100vh",
     width: "100vw",
   };
+
+  // Context
+  const { setfiltred, appState } = useContext(AppContext);
 
   return (
     <AppProvider>
@@ -50,7 +54,7 @@ export default function Home() {
                 <PokemonModal />
                 <PokemonList />
               </ModalProvider>
-              <ButtonMorePokemons />
+              {!appState?.filtred && <ButtonMorePokemons />}
             </div>
           </div>
         </div>
