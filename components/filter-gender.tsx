@@ -10,7 +10,7 @@ import {
 
 const FilterGender = () => {
   // Context
-  const { setPokemonList, setfiltred } = useContext(AppContext);
+  const { setPokemonList, setfiltred, appState } = useContext(AppContext);
 
   //States
   const [resultGenderNames, setResultGenderNames] = useState<Array<Result>>([]);
@@ -102,6 +102,10 @@ const FilterGender = () => {
     } else {
       setIsFiltred(false);
       setfiltred(false);
+      //make a logic comparation to know if global filter prop state and get initial state
+      // if(appState.filtred){
+
+      // }
     }
   };
 
