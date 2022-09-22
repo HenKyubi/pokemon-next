@@ -10,7 +10,11 @@ import {
 
 const FilterGender = () => {
   // Context
-  const { setPokemonList, setfiltred, appState } = useContext(AppContext);
+  const {
+    setPokemonList,
+    setHasActiveFilters: setfiltred,
+    appState,
+  } = useContext(AppContext);
 
   //States
   const [resultGenderNames, setResultGenderNames] = useState<Array<Result>>([]);

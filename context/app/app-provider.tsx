@@ -7,7 +7,10 @@ const INITIAL_STATE: AppState = {
   pokemonList: [],
   positionOnArray: 1,
   hasNextList: true,
-  filtred: false,
+  hasTypeFilter: false,
+  hasColorFilter: false,
+  hasGenderFilter: false,
+  hasActiveFilters: false,
 };
 
 interface Props {
@@ -24,8 +27,17 @@ export const AppProvider = ({ children }: Props) => {
   const setHasNextList = () => {
     dispatch({ type: "setHasNextList" });
   };
-  const setfiltred = (isFiltred : boolean) => {
-    dispatch({ type: "setFiltred", payload: { isFiltred } });
+  const setHasTypeFilter = (isFiltred: boolean) => {
+    dispatch({ type: "setHasTypeFilter", payload: { isFiltred } });
+  };
+  const setHasColorFilter = (isFiltred: boolean) => {
+    dispatch({ type: "setHasColorFilter", payload: { isFiltred } });
+  };
+  const setHasGenderFilter = (isFiltred: boolean) => {
+    dispatch({ type: "setHasGenderFilter", payload: { isFiltred } });
+  };
+  const setHasActiveFilter = (isFiltred: boolean) => {
+    dispatch({ type: "setHasActiveFilter", payload: { isFiltred } });
   };
   return (
     <AppContext.Provider
@@ -34,7 +46,10 @@ export const AppProvider = ({ children }: Props) => {
         setPokemonList,
         setPositionOnArray,
         setHasNextList,
-        setfiltred,
+        setHasTypeFilter: setHasTypeFilter,
+        setHasColorFilter: setHasColorFilter,
+        setHasGenderFilter: setHasGenderFilter,
+        setHasActiveFilters: setHasActiveFilter,
       }}
     >
       {children}

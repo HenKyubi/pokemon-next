@@ -8,7 +8,8 @@ import { getFilterTypeNames, getPokemonsByType } from "../pages/api/index";
 
 const FilterType = () => {
   // Context
-  const { setPokemonList, setfiltred } = useContext(AppContext);
+  const { setPokemonList, setHasActiveFilters: setfiltred } =
+    useContext(AppContext);
 
   const [resultTypesNames, setResultTypesNames] = useState<Array<Result>>([]);
   const [checkedState, setCheckedState] = useState<Array<boolean>>([]);

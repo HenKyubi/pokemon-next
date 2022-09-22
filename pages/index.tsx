@@ -30,7 +30,7 @@ export default function Home() {
   };
 
   // Context
-  const { setfiltred, appState } = useContext(AppContext);
+  const { setHasActiveFilters: setfiltred, appState } = useContext(AppContext);
 
   return (
     <AppProvider>
@@ -54,7 +54,7 @@ export default function Home() {
                 <PokemonModal />
                 <PokemonList />
               </ModalProvider>
-              {!appState?.filtred && <ButtonMorePokemons />}
+              {!appState?.hasActiveFilters && <ButtonMorePokemons />}
             </div>
           </div>
         </div>

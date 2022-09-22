@@ -9,7 +9,8 @@ import { getColorNames, getPokemonsByColor } from "../pages/api/index";
 
 const FilterColors = () => {
   // Context
-  const { setPokemonList,setfiltred } = useContext(AppContext);
+  const { setPokemonList, setHasActiveFilters: setfiltred } =
+    useContext(AppContext);
 
   const [resultColorNames, setResultColorNames] = useState<Array<Result>>([]);
   const [checkedState, setCheckedState] = useState<Array<boolean>>([]);

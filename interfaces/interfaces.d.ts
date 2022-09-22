@@ -23,7 +23,10 @@ export interface AppState {
   pokemonList: Array<Pokemon>;
   positionOnArray: number;
   hasNextList: boolean;
-  filtred: boolean;
+  hasTypeFilter: boolean;
+  hasColorFilter: boolean;
+  hasGenderFilter: boolean;
+  hasActiveFilters: boolean;
 }
 
 export interface ModalState {
