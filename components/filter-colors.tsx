@@ -5,16 +5,18 @@ import { PokemonSpecy } from "../interfaces/response-by-color";
 import { Result } from "../interfaces/response-color-names";
 import { getColorNames, getPokemonsByColor } from "../pages/api/index";
 // import classNames from "classnames";
-// import FilterContext from "../context/filter-context";
 
 const FilterColors = () => {
   // Context
-  const { setPokemonList, setHasActiveFilters: setfiltred } =
-    useContext(AppContext);
+  const {
+    appState,
+    setPokemonList,
+    setHasColorFilter,
+    validateIfHasActiveFilters,
+  } = useContext(AppContext);
 
   const [resultColorNames, setResultColorNames] = useState<Array<Result>>([]);
   const [checkedState, setCheckedState] = useState<Array<boolean>>([]);
-  const [isFiltred, setIsFiltred] = useState<boolean>(false);
 
   const fetchFilterNames = useCallback(async () => {
     try {
@@ -58,8 +60,7 @@ const FilterColors = () => {
 
     //Se valida si hay checkeados o no
     if (typesChecked.length > 0) {
-      setIsFiltred(true);
-      setfiltred(true);
+      setHasColorFilter(true);
       const getPokemonListsByColor: Array<Promise<Array<Pokemon>>> =
         typesChecked.map(async (value) => {
           return await getPokemonListByColor(value).then((result) =>
@@ -97,8 +98,8 @@ const FilterColors = () => {
         }
       });
     } else {
-      setIsFiltred(false);
-      setfiltred(false);
+      setHasColorFilter(false);
+      validateIfHasActiveFilters();
     }
   };
 

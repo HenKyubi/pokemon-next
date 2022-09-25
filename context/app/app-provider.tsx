@@ -39,6 +39,9 @@ export const AppProvider = ({ children }: Props) => {
   const setHasActiveFilter = (isFiltred: boolean) => {
     dispatch({ type: "setHasActiveFilter", payload: { isFiltred } });
   };
+  const validateIfHasActiveFilters = () => {
+    dispatch({ type: "validateIfHasActiveFilters" });
+  };
   return (
     <AppContext.Provider
       value={{
@@ -50,6 +53,7 @@ export const AppProvider = ({ children }: Props) => {
         setHasColorFilter: setHasColorFilter,
         setHasGenderFilter: setHasGenderFilter,
         setHasActiveFilters: setHasActiveFilter,
+        validateIfHasActiveFilters: validateIfHasActiveFilters,
       }}
     >
       {children}

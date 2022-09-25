@@ -6,7 +6,8 @@ type AppActions =
   | { type: "setHasTypeFilter"; payload: { isFiltred: boolean } }
   | { type: "setHasColorFilter"; payload: { isFiltred: boolean } }
   | { type: "setHasGenderFilter"; payload: { isFiltred: boolean } }
-  | { type: "setHasActiveFilter"; payload: { isFiltred: boolean } };
+  | { type: "setHasActiveFilter"; payload: { isFiltred: boolean } }
+  | { type: "validateIfHasActiveFilters" };
 
 // | { type: "setModalData"; payload: { pokemonDetails: PokemonDetails } }
 
@@ -26,10 +27,16 @@ export const AppReducer = (state: AppState, action: AppActions): AppState => {
       return { ...state, hasActiveFilters: action.payload.isFiltred };
     case "setHasActiveFilter":
       return { ...state, hasActiveFilters: action.payload.isFiltred };
-    // case "toggleModal":
-    //   return { ...state, modalOpen: !state.modaalOpen };
-    // case "setModalData":
-    //   return { ...state, modalData: action.payload.pokemonDetails };
+    case "validateIfHasActiveFilters":
+      if (
+        state.hasTypeFilter ||
+        state.hasColorFilter ||
+        state.hasGenderFilter
+      ) {
+        return { ...state, hasActiveFilters: true };
+      } else {
+        return { ...state, hasActiveFilters: false };
+      }
     default:
       state;
   }

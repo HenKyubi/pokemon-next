@@ -10,6 +10,7 @@ type AppContextProps = {
   setHasColorFilter: (isFiltred: boolean) => void;
   setHasGenderFilter: (isFiltred: boolean) => void;
   setHasActiveFilters: (isFiltred: boolean) => void;
+  validateIfHasActiveFilters: () => void;
 };
 
 export const AppContext = createContext<AppContextProps>({} as AppContextProps);

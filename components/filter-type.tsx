@@ -8,15 +8,15 @@ import { getFilterTypeNames, getPokemonsByType } from "../pages/api/index";
 
 const FilterType = () => {
   // Context
-  const { setPokemonList, setHasActiveFilters: setfiltred } =
-    useContext(AppContext);
+  const {
+    appState,
+    setPokemonList,
+    setHasTypeFilter,
+    validateIfHasActiveFilters,
+  } = useContext(AppContext);
 
   const [resultTypesNames, setResultTypesNames] = useState<Array<Result>>([]);
   const [checkedState, setCheckedState] = useState<Array<boolean>>([]);
-  const [isFiltred, setIsFiltred] = useState<boolean>(false);
-
-  // const [filtersSelected, setFiltersSelected] = useState([])
-  // // const { setFilterType } = useContext(FilterContext)
 
   const fetchFilterNames = useCallback(async () => {
     try {
@@ -60,8 +60,7 @@ const FilterType = () => {
 
     //Se valida si hay checkeados o no
     if (typesChecked.length > 0) {
-      setIsFiltred(true);
-      setfiltred(true);
+      setHasTypeFilter(true);
       const getPokemonListsByType: Array<Promise<Array<Pokemon>>> =
         typesChecked.map(async (value) => {
           return await getPokemonListByType(value).then(
@@ -100,8 +99,8 @@ const FilterType = () => {
         }
       });
     } else {
-      setIsFiltred(false);
-      setfiltred(false);
+      setHasTypeFilter(false);
+      validateIfHasActiveFilters();
     }
   };
 

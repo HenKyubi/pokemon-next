@@ -11,15 +11,15 @@ import {
 const FilterGender = () => {
   // Context
   const {
-    setPokemonList,
-    setHasActiveFilters: setfiltred,
     appState,
+    setPokemonList,
+    setHasGenderFilter,
+    validateIfHasActiveFilters,
   } = useContext(AppContext);
 
   //States
   const [resultGenderNames, setResultGenderNames] = useState<Array<Result>>([]);
   const [checkedState, setCheckedState] = useState<Array<boolean>>([]);
-  const [isFiltred, setIsFiltred] = useState<boolean>(false);
 
   const fetchFilterNames = useCallback(async () => {
     try {
@@ -64,8 +64,7 @@ const FilterGender = () => {
 
     //Se valida si hay checkeados o no
     if (typesChecked.length > 0) {
-      setIsFiltred(true);
-      setfiltred(true);
+      setHasGenderFilter(true);
       const getPokemonListsByType: Array<Promise<Array<Pokemon>>> =
         typesChecked.map(async (value) => {
           return await getPokemonListByGender(value).then(
@@ -104,12 +103,8 @@ const FilterGender = () => {
         }
       });
     } else {
-      setIsFiltred(false);
-      setfiltred(false);
-      //make a logic comparation to know if global filter prop state and get initial state
-      // if(appState.filtred){
-
-      // }
+      setHasGenderFilter(false);
+      validateIfHasActiveFilters();
     }
   };
 
