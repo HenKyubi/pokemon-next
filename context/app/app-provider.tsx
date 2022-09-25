@@ -36,9 +36,6 @@ export const AppProvider = ({ children }: Props) => {
   const setHasGenderFilter = (isFiltred: boolean) => {
     dispatch({ type: "setHasGenderFilter", payload: { isFiltred } });
   };
-  const setHasActiveFilter = (isFiltred: boolean) => {
-    dispatch({ type: "setHasActiveFilter", payload: { isFiltred } });
-  };
   const validateIfHasActiveFilters = () => {
     dispatch({ type: "validateIfHasActiveFilters" });
   };
@@ -52,7 +49,6 @@ export const AppProvider = ({ children }: Props) => {
         setHasTypeFilter: setHasTypeFilter,
         setHasColorFilter: setHasColorFilter,
         setHasGenderFilter: setHasGenderFilter,
-        setHasActiveFilters: setHasActiveFilter,
         validateIfHasActiveFilters: validateIfHasActiveFilters,
       }}
     >

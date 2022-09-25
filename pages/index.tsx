@@ -30,7 +30,7 @@ export default function Home() {
   };
 
   // Context
-  const { setHasActiveFilters: setfiltred, appState } = useContext(AppContext);
+  const { appState } = useContext(AppContext);
 
   return (
     <AppProvider>

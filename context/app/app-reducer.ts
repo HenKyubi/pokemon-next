@@ -1,4 +1,4 @@
-import { AppState, Pokemon, PokemonDetails } from "../../interfaces/interfaces";
+import { AppState, Pokemon } from "../../interfaces/interfaces";
 type AppActions =
   | { type: "setPokemonList"; payload: { pokemonList: Array<Pokemon> } }
   | { type: "setPositionOnArray" }
@@ -6,7 +6,6 @@ type AppActions =
   | { type: "setHasTypeFilter"; payload: { isFiltred: boolean } }
   | { type: "setHasColorFilter"; payload: { isFiltred: boolean } }
   | { type: "setHasGenderFilter"; payload: { isFiltred: boolean } }
-  | { type: "setHasActiveFilter"; payload: { isFiltred: boolean } }
   | { type: "validateIfHasActiveFilters" };
 
 // | { type: "setModalData"; payload: { pokemonDetails: PokemonDetails } }
@@ -20,13 +19,11 @@ export const AppReducer = (state: AppState, action: AppActions): AppState => {
     case "setHasNextList":
       return { ...state, hasNextList: !state.hasNextList };
     case "setHasTypeFilter":
-      return { ...state, hasActiveFilters: action.payload.isFiltred };
+      return { ...state, hasTypeFilter: action.payload.isFiltred };
     case "setHasColorFilter":
-      return { ...state, hasActiveFilters: action.payload.isFiltred };
+      return { ...state, hasColorFilter: action.payload.isFiltred };
     case "setHasGenderFilter":
-      return { ...state, hasActiveFilters: action.payload.isFiltred };
-    case "setHasActiveFilter":
-      return { ...state, hasActiveFilters: action.payload.isFiltred };
+      return { ...state, hasGenderFilter: action.payload.isFiltred };
     case "validateIfHasActiveFilters":
       if (
         state.hasTypeFilter ||

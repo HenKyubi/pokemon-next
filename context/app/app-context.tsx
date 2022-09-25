@@ -9,7 +9,6 @@ type AppContextProps = {
   setHasTypeFilter: (isFiltred: boolean) => void;
   setHasColorFilter: (isFiltred: boolean) => void;
   setHasGenderFilter: (isFiltred: boolean) => void;
-  setHasActiveFilters: (isFiltred: boolean) => void;
   validateIfHasActiveFilters: () => void;
 };
 

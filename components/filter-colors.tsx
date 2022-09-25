@@ -61,6 +61,7 @@ const FilterColors = () => {
     //Se valida si hay checkeados o no
     if (typesChecked.length > 0) {
       setHasColorFilter(true);
+      validateIfHasActiveFilters();
       const getPokemonListsByColor: Array<Promise<Array<Pokemon>>> =
         typesChecked.map(async (value) => {
           return await getPokemonListByColor(value).then((result) =>

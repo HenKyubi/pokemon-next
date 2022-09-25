@@ -61,6 +61,7 @@ const FilterType = () => {
     //Se valida si hay checkeados o no
     if (typesChecked.length > 0) {
       setHasTypeFilter(true);
+      validateIfHasActiveFilters();
       const getPokemonListsByType: Array<Promise<Array<Pokemon>>> =
         typesChecked.map(async (value) => {
           return await getPokemonListByType(value).then(
