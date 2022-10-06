@@ -13,7 +13,22 @@ type AppActions =
 export const AppReducer = (state: AppState, action: AppActions): AppState => {
   switch (action.type) {
     case "setPokemonList":
-      return { ...state, pokemonList: action.payload.pokemonList };
+      if (state.hasActiveFilters) {
+        let newPokemonList = action.payload.pokemonList.filter(
+          (pokemon) =>
+            {
+              // console.log(pokemon)
+              // console.log(state.pokemonList.find((poke)=>poke.idPokemon===pokemon.idPokemon))
+              return state.pokemonList.find(
+                (poke) => poke.idPokemon === pokemon.idPokemon
+              );
+          }
+        );
+        // console.log(newPokemonList)
+        return { ...state, pokemonList: newPokemonList };
+      } else {
+        return { ...state, pokemonList: action.payload.pokemonList };
+      }
     case "setPositionOnArray":
       return { ...state, positionOnArray: state.positionOnArray + 1 };
     case "setHasNextList":
@@ -34,6 +49,8 @@ export const AppReducer = (state: AppState, action: AppActions): AppState => {
       } else {
         return { ...state, hasActiveFilters: false };
       }
+    // case: "":
+    // return {};
     default:
       state;
   }
