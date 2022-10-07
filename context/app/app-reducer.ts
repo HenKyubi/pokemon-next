@@ -14,17 +14,22 @@ export const AppReducer = (state: AppState, action: AppActions): AppState => {
   switch (action.type) {
     case "setPokemonList":
       if (state.hasActiveFilters) {
-        let newPokemonList = action.payload.pokemonList.filter(
-          (pokemon) =>
-            {
-              // console.log(pokemon)
-              // console.log(state.pokemonList.find((poke)=>poke.idPokemon===pokemon.idPokemon))
-              return state.pokemonList.find(
-                (poke) => poke.idPokemon === pokemon.idPokemon
-              );
-          }
-        );
+        let newPokemonList = action.payload.pokemonList.filter((pokemon) => {
+          // console.log(pokemon)
+          // console.log(state.pokemonList.find((poke)=>poke.idPokemon===pokemon.idPokemon))
+          return state.pokemonList.find(
+            (poke) => poke.idPokemon === pokemon.idPokemon
+          );
+        });
+
+        // let newPL = state.pokemonList.filter((pokemon) => {
+        //   return action.payload.pokemonList.find(
+        //     (poke) => poke.idPokemon === pokemon.idPokemon
+        //   );
+        // });
         // console.log(newPokemonList)
+
+        console.log( state.hasTypeFilter && state.hasColorFilter ) 
         return { ...state, pokemonList: newPokemonList };
       } else {
         return { ...state, pokemonList: action.payload.pokemonList };

@@ -16,6 +16,8 @@ import { AppProvider } from "../context/app/app-provider";
 import { ModalProvider } from "../context/modal/modal-provider";
 import PokemonModal from "../components/pokemon-modal";
 import { AppContext } from "../context/app/app-context";
+import { FilterContext } from "../context/filter/filter-context";
+import { FilterProvider } from "../context/filter/filter-provider";
 
 export default function Home() {
   // const switchLoading = () => {
@@ -31,6 +33,7 @@ export default function Home() {
 
   // Context
   const { appState } = useContext(AppContext);
+  const { filterState } = useContext(FilterContext);
 
   return (
     <AppProvider>
@@ -44,9 +47,11 @@ export default function Home() {
         <Navbar />
         <div className="row m-0 p-0 h-100 w-100">
           <div className="col-3  m-0 p-0 h-100">
-            <FilterType />
-            <FilterColors />
-            <FilterGender />
+            <FilterProvider>
+              <FilterType />
+              <FilterColors />
+              <FilterGender />
+            </FilterProvider>
           </div>
           <div className="col-9 m-0 p-0 ">
             <div className="row m-0 p-0 w-100">

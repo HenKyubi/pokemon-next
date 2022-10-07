@@ -29,14 +29,25 @@ export interface AppState {
   hasActiveFilters: boolean;
 }
 
+export interface FilterState {
+  pokemonListFiltred: Array<Pokemon>;
+  pokemonListFiltredByType: Array<Pokemon>;
+  pokemonListFiltredByColor: Array<Pokemon>;
+  pokemonListFiltredByGender: Array<Pokemon>;
+  hasFilterType: boolean;
+  hasFilterColor: boolean;
+  hasFilterGender: boolean;
+  hasActiveFilters: boolean;
+}
+
 export interface ModalState {
   modalOpen: boolean;
   pokemonDataDetails: PokemonDetails;
 }
 
-export interface FilterState {
-  pokemonsBySearch: Array<Pokemon>;
-  pokemonsByColor: Array<Pokemon>;
-  pokemonsByType: Array<Pokemon>;
-  pokemonsByGender: Array<Pokemon>;
-}
+// export interface FilterState {
+//   pokemonsBySearch: Array<Pokemon>;
+//   pokemonsByColor: Array<Pokemon>;
+//   pokemonsByType: Array<Pokemon>;
+//   pokemonsByGender: Array<Pokemon>;
+// }
