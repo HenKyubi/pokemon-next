@@ -104,15 +104,18 @@ const FilterColors = () => {
           setHasFilterColor(true);
           validateIfHasActiveFilters();
           setPokemonListFiltredByColor(pokemonList);
+          filter();
         });
     } else {
       setHasFilterColor(false);
       validateIfHasActiveFilters();
-      if (filterState.hasActiveFilters) {
-        filter();
-      } else {
-        setPokemonListFiltredByColor([]);
-      }
+      setPokemonListFiltredByColor([]);
+      filter();
+      // if (filterState.hasActiveFilters) {
+      //   filter();
+      // } else {
+      //   setPokemonListFiltredByColor([]);
+      // }
     }
   };
 

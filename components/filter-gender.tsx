@@ -108,15 +108,13 @@ const FilterGender = () => {
           setHasFilterGender(true);
           validateIfHasActiveFilters();
           setPokemonListFiltredByGender(pokemonList);
+          filter();
         });
     } else {
       setHasFilterGender(false);
       validateIfHasActiveFilters();
-      if (filterState.hasActiveFilters) {
-        filter();
-      } else {
-        setPokemonListFiltredByGender([]);
-      }
+      setPokemonListFiltredByGender([]);
+      filter();
     }
   };
 

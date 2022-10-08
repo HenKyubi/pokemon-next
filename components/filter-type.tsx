@@ -102,15 +102,18 @@ const FilterType = () => {
           setHasFilterType(true);
           validateIfHasActiveFilters();
           setPokemonListFiltredByType(pokemonList);
+          filter();
         });
     } else {
       setHasFilterType(false);
       validateIfHasActiveFilters();
-      if (filterState.hasActiveFilters) {
-        filter();
-      } else {
-        setPokemonListFiltredByType([]);
-      }
+      setPokemonListFiltredByType([]);
+      filter();
+      // if (filterState.hasActiveFilters) {
+      //   filter();
+      // } else {
+      //   setPokemonListFiltredByType([]);
+      // }
     }
   };
 
