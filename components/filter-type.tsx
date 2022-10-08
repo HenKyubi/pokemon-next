@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
-import { AppContext } from "../context/app/app-context";
 import { PokemonResult } from "../interfaces/response-by-type";
 import { ResponseTypesNames, Result } from "../interfaces/response-types-names";
 import { Pokemon } from "../interfaces/interfaces";
 import { getFilterTypeNames, getPokemonsByType } from "../pages/api/index";
-// import FilterContext from "../context/filter-context"
+import { FilterContext } from "../context/filter/filter-context";
 
 const FilterType = () => {
   // Context
   const {
-    appState,
-    setPokemonList,
-    setHasTypeFilter,
+    filterState,
+    filter,
+    setPokemonListFiltredByType,
+    setHasFilterType,
     validateIfHasActiveFilters,
-  } = useContext(AppContext);
+  } = useContext(FilterContext);
 
   const [resultTypesNames, setResultTypesNames] = useState<Array<Result>>([]);
   const [checkedState, setCheckedState] = useState<Array<boolean>>([]);
@@ -77,7 +77,7 @@ const FilterType = () => {
       Promise.all(getPokemonListsByType)
         .then((lists) => {
           if (lists.length === 1) {
-            setPokemonList(lists[0]);
+            return lists[0];
           } else {
             const listOfAll = [...lists.flat()];
 
@@ -95,16 +95,22 @@ const FilterType = () => {
             const set = Array.from(
               new Set(duplicates.map((item) => JSON.stringify(item)))
             ).map((pokemon) => JSON.parse(pokemon));
-            setPokemonList(set);
+            return set;
           }
         })
-        .then(() => {
-          setHasTypeFilter(true);
+        .then((pokemonList) => {
+          setHasFilterType(true);
           validateIfHasActiveFilters();
+          setPokemonListFiltredByType(pokemonList);
         });
     } else {
-      setHasTypeFilter(false);
+      setHasFilterType(false);
       validateIfHasActiveFilters();
+      if (filterState.hasActiveFilters) {
+        filter();
+      } else {
+        setPokemonListFiltredByType([]);
+      }
     }
   };
 

@@ -3,7 +3,8 @@ import { FilterState, Pokemon } from "../../interfaces/interfaces";
 
 type FilterContextProps = {
   filterState: FilterState;
-  setPokemonListFiltred: (pokemonListFiltred: Array<Pokemon>) => void;
+  filter: () => void;
+  // setPokemonListFiltred: (pokemonListFiltred: Array<Pokemon>) => void;
   setPokemonListFiltredByType: (pokemonListFiltred: Array<Pokemon>) => void;
   setPokemonListFiltredByColor: (pokemonListFiltred: Array<Pokemon>) => void;
   setPokemonListFiltredByGender: (pokemonListFiltred: Array<Pokemon>) => void;

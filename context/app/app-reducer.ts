@@ -13,49 +13,29 @@ type AppActions =
 export const AppReducer = (state: AppState, action: AppActions): AppState => {
   switch (action.type) {
     case "setPokemonList":
-      if (state.hasActiveFilters) {
-        let newPokemonList = action.payload.pokemonList.filter((pokemon) => {
-          // console.log(pokemon)
-          // console.log(state.pokemonList.find((poke)=>poke.idPokemon===pokemon.idPokemon))
-          return state.pokemonList.find(
-            (poke) => poke.idPokemon === pokemon.idPokemon
-          );
-        });
-
-        // let newPL = state.pokemonList.filter((pokemon) => {
-        //   return action.payload.pokemonList.find(
-        //     (poke) => poke.idPokemon === pokemon.idPokemon
-        //   );
-        // });
-        // console.log(newPokemonList)
-
-        console.log( state.hasTypeFilter && state.hasColorFilter ) 
-        return { ...state, pokemonList: newPokemonList };
-      } else {
-        return { ...state, pokemonList: action.payload.pokemonList };
-      }
+      return { ...state, pokemonList: action.payload.pokemonList };
     case "setPositionOnArray":
       return { ...state, positionOnArray: state.positionOnArray + 1 };
     case "setHasNextList":
       return { ...state, hasNextList: !state.hasNextList };
-    case "setHasTypeFilter":
-      return { ...state, hasTypeFilter: action.payload.isFiltred };
-    case "setHasColorFilter":
-      return { ...state, hasColorFilter: action.payload.isFiltred };
-    case "setHasGenderFilter":
-      return { ...state, hasGenderFilter: action.payload.isFiltred };
-    case "validateIfHasActiveFilters":
-      if (
-        state.hasTypeFilter ||
-        state.hasColorFilter ||
-        state.hasGenderFilter
-      ) {
-        return { ...state, hasActiveFilters: true };
-      } else {
-        return { ...state, hasActiveFilters: false };
-      }
-    // case: "":
-    // return {};
+    // case "setHasTypeFilter":
+    //   return { ...state, hasTypeFilter: action.payload.isFiltred };
+    // case "setHasColorFilter":
+    //   return { ...state, hasColorFilter: action.payload.isFiltred };
+    // case "setHasGenderFilter":
+    //   return { ...state, hasGenderFilter: action.payload.isFiltred };
+    // case "validateIfHasActiveFilters":
+    //   if (
+    //     state.hasTypeFilter ||
+    //     state.hasColorFilter ||
+    //     state.hasGenderFilter
+    //   ) {
+    //     return { ...state, hasActiveFilters: true };
+    //   } else {
+    //     return { ...state, hasActiveFilters: false };
+    //   }
+    // // case: "":
+    // // return {};
     default:
       state;
   }

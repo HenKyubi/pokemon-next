@@ -19,6 +19,11 @@ interface Props {
 }
 export const FilterProvider = ({ children }: Props) => {
   const [filterState, dispatch] = useReducer(FilterReducer, INITIAL_STATE);
+  const filter = () => {
+    dispatch({
+      type: "filter",
+    });
+  };
   const setPokemonListFiltred = (pokemonListFiltred: Array<Pokemon>) => {
     dispatch({
       type: "setPokemonListFiltred",
@@ -61,7 +66,8 @@ export const FilterProvider = ({ children }: Props) => {
     <FilterContext.Provider
       value={{
         filterState: filterState,
-        setPokemonListFiltred: setPokemonListFiltred,
+        filter: filter,
+        // setPokemonListFiltred: setPokemonListFiltred,
         setPokemonListFiltredByType: setPokemonListFiltredByType,
         setPokemonListFiltredByColor: setPokemonListFiltredByColor,
         setPokemonListFiltredByGender: setPokemonListFiltredByGender,

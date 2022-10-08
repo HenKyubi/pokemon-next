@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { AppContext } from "../context/app/app-context";
+import { FilterContext } from "../context/filter/filter-context";
 import { Pokemon } from "../interfaces/interfaces";
 import { PokemonSpecy } from "../interfaces/response-by-color";
 import { Result } from "../interfaces/response-color-names";
@@ -8,12 +9,14 @@ import { getColorNames, getPokemonsByColor } from "../pages/api/index";
 
 const FilterColors = () => {
   // Context
+
   const {
-    appState,
-    setPokemonList,
-    setHasColorFilter,
+    filterState,
+    filter,
+    setHasFilterColor,
+    setPokemonListFiltredByColor,
     validateIfHasActiveFilters,
-  } = useContext(AppContext);
+  } = useContext(FilterContext);
 
   const [resultColorNames, setResultColorNames] = useState<Array<Result>>([]);
   const [checkedState, setCheckedState] = useState<Array<boolean>>([]);
@@ -76,7 +79,7 @@ const FilterColors = () => {
       Promise.all(getPokemonListsByColor)
         .then((lists) => {
           if (lists.length === 1) {
-            setPokemonList(lists[0]);
+            return lists[0];
           } else {
             const listOfAll = [...lists.flat()];
 
@@ -94,16 +97,22 @@ const FilterColors = () => {
             const set = Array.from(
               new Set(duplicates.map((item) => JSON.stringify(item)))
             ).map((pokemon) => JSON.parse(pokemon));
-            setPokemonList(set);
+            return set;
           }
         })
-        .then(() => {
-          setHasColorFilter(true);
+        .then((pokemonList) => {
+          setHasFilterColor(true);
           validateIfHasActiveFilters();
+          setPokemonListFiltredByColor(pokemonList);
         });
     } else {
-      setHasColorFilter(false);
+      setHasFilterColor(false);
       validateIfHasActiveFilters();
+      if (filterState.hasActiveFilters) {
+        filter();
+      } else {
+        setPokemonListFiltredByColor([]);
+      }
     }
   };
 

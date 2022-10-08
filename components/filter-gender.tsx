@@ -7,15 +7,17 @@ import {
   ResponseGenderNames,
   Result,
 } from "../interfaces/response-gender-names";
+import { FilterContext } from "../context/filter/filter-context";
 
 const FilterGender = () => {
   // Context
   const {
-    appState,
-    setPokemonList,
-    setHasGenderFilter,
+    filterState,
+    filter,
+    setHasFilterGender,
+    setPokemonListFiltredByGender,
     validateIfHasActiveFilters,
-  } = useContext(AppContext);
+  } = useContext(FilterContext);
 
   //States
   const [resultGenderNames, setResultGenderNames] = useState<Array<Result>>([]);
@@ -64,8 +66,6 @@ const FilterGender = () => {
 
     //Se valida si hay checkeados o no
     if (typesChecked.length > 0) {
-      setHasGenderFilter(true);
-      validateIfHasActiveFilters();
       const getPokemonListsByType: Array<Promise<Array<Pokemon>>> =
         typesChecked.map(async (value) => {
           return await getPokemonListByGender(value).then(
@@ -80,32 +80,43 @@ const FilterGender = () => {
               })
           );
         });
-      Promise.all(getPokemonListsByType).then((lists) => {
-        if (lists.length === 1) {
-          setPokemonList(lists[0]);
-        } else {
-          const listOfAll = [...lists.flat()];
+      Promise.all(getPokemonListsByType)
+        .then((lists) => {
+          if (lists.length === 1) {
+            return lists[0];
+          } else {
+            const listOfAll = [...lists.flat()];
 
-          const search = listOfAll.reduce((acc, pokemon) => {
-            acc[pokemon.namePokemon] = ++acc[pokemon.namePokemon] || 0;
-            return acc;
-          }, {});
+            const search = listOfAll.reduce((acc, pokemon) => {
+              acc[pokemon.namePokemon] = ++acc[pokemon.namePokemon] || 0;
+              return acc;
+            }, {});
 
-          const duplicates = listOfAll.filter((pokemon) => {
-            if (search[pokemon.namePokemon] === lists.length - 1) {
-              return search[pokemon.namePokemon];
-            }
-          });
+            const duplicates = listOfAll.filter((pokemon) => {
+              if (search[pokemon.namePokemon] === lists.length - 1) {
+                return search[pokemon.namePokemon];
+              }
+            });
 
-          const set = Array.from(
-            new Set(duplicates.map((item) => JSON.stringify(item)))
-          ).map((pokemon) => JSON.parse(pokemon));
-          setPokemonList(set);
-        }
-      });
+            const set = Array.from(
+              new Set(duplicates.map((item) => JSON.stringify(item)))
+            ).map((pokemon) => JSON.parse(pokemon));
+            return set;
+          }
+        })
+        .then((pokemonList) => {
+          setHasFilterGender(true);
+          validateIfHasActiveFilters();
+          setPokemonListFiltredByGender(pokemonList);
+        });
     } else {
-      setHasGenderFilter(false);
+      setHasFilterGender(false);
       validateIfHasActiveFilters();
+      if (filterState.hasActiveFilters) {
+        filter();
+      } else {
+        setPokemonListFiltredByGender([]);
+      }
     }
   };
 
