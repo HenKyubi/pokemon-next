@@ -8,9 +8,11 @@ const INITIAL_STATE: FilterState = {
   pokemonListFiltredByType: [],
   pokemonListFiltredByColor: [],
   pokemonListFiltredByGender: [],
+  pokemonListFiltredBySearch: [],
   hasFilterType: false,
   hasFilterColor: false,
   hasFilterGender: false,
+  hasFilterSearch: false,
   hasActiveFilters: false,
 };
 
@@ -22,12 +24,6 @@ export const FilterProvider = ({ children }: Props) => {
   const filter = () => {
     dispatch({
       type: "filter",
-    });
-  };
-  const setPokemonListFiltred = (pokemonListFiltred: Array<Pokemon>) => {
-    dispatch({
-      type: "setPokemonListFiltred",
-      payload: { pokemonListFiltred },
     });
   };
   const setPokemonListFiltredByType = (pokemonListFiltred: Array<Pokemon>) => {
@@ -50,6 +46,14 @@ export const FilterProvider = ({ children }: Props) => {
       payload: { pokemonListFiltred },
     });
   };
+  const setPokemonListFiltredBySearch = (
+    pokemonListFiltred: Array<Pokemon>
+  ) => {
+    dispatch({
+      type: "setPokemonListFiltredBySearch",
+      payload: { pokemonListFiltred },
+    });
+  };
   const setHasFilterType = (isFiltred: boolean) => {
     dispatch({ type: "setHasFilterType", payload: { isFiltred } });
   };
@@ -59,6 +63,9 @@ export const FilterProvider = ({ children }: Props) => {
   const setHasFilterGender = (isFiltred: boolean) => {
     dispatch({ type: "setHasFilterGender", payload: { isFiltred } });
   };
+  const setHasFilterSearch = (isFiltred: boolean) => {
+    dispatch({ type: "setHasFilterSearch", payload: { isFiltred } });
+  };
   const validateIfHasActiveFilters = () => {
     dispatch({ type: "validateIfHasActiveFilters" });
   };
@@ -67,13 +74,14 @@ export const FilterProvider = ({ children }: Props) => {
       value={{
         filterState: filterState,
         filter: filter,
-        // setPokemonListFiltred: setPokemonListFiltred,
         setPokemonListFiltredByType: setPokemonListFiltredByType,
         setPokemonListFiltredByColor: setPokemonListFiltredByColor,
         setPokemonListFiltredByGender: setPokemonListFiltredByGender,
+        setPokemonListFiltredBySearch: setPokemonListFiltredBySearch,
         setHasFilterType: setHasFilterType,
         setHasFilterColor: setHasFilterColor,
         setHasFilterGender: setHasFilterGender,
+        setHasFilterSearch: setHasFilterSearch,
         validateIfHasActiveFilters: validateIfHasActiveFilters,
       }}
     >

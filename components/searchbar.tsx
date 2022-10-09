@@ -1,35 +1,27 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
+import { FilterContext } from "../context/filter/filter-context";
 import { getPokemonsBySearch } from "../pages/api/index";
 
 const SearchBar = () => {
-  // const { setData } = useContext(AppContext);
-  // const [dataListPokemons, setDataListPokemons] = useState([]);
-  const search = (word: string) => {
-    getPokemonsBySearch(word);
-  };
+  // Context
+  const {
+    filterState,
+    filter,
+    setPokemonListFiltredBySearch,
+    setHasFilterSearch,
+    validateIfHasActiveFilters,
+  } = useContext(FilterContext);
 
-  // const search = async (name) => {
-  //   const dataFormatted = JSON.parse(localStorage.getItem("allPokemons"));
-  //   let listOrder = [];
-  //   for (let index = 0; index < dataFormatted.length; index++) {
-  //     const element = dataFormatted[index];
-  //     for (let index = 0; index < element.length; index++) {
-  //       const pokemonData = element[index];
-  //       listOrder.push(pokemonData);
-  //     }
-  //   }
-  //   setDataListPokemons(listOrder);
-  //   const searchList = listOrder.filter(
-  //     (item) =>
-  //       item.idPokemon.toString().includes(Number(name)) ||
-  //       item.namePokemon.includes(name)
-  //   );
-  //   let pokemonList = await reOrderFormatted(searchList);
-  //   pokemonList =
-  //     pokemonList.length < searchList.length ? searchList : pokemonList;
-  //   const res = name ? pokemonList : dataFormatted[0];
-  //   setData(res);
-  // };
+  // search
+  const handleOnChange = (word: string) => {
+    const pokemonListFiltred = getPokemonsBySearch(word);
+    pokemonListFiltred.length > 0
+      ? setHasFilterSearch(true)
+      : setHasFilterSearch(false);
+    validateIfHasActiveFilters();
+    setPokemonListFiltredBySearch(pokemonListFiltred);
+    filter();
+  };
 
   return (
     <div className="d-flex form-search align-items-center">
@@ -39,12 +31,11 @@ const SearchBar = () => {
         type="search"
         placeholder="Search"
         aria-label="Search"
-        // onChange={(event) => search(event.target.value)}
-        onChange={(event) => search(event.target.value)}
+        onChange={(event) => handleOnChange(event.target.value)}
         list="dataListPokemons"
       />
       <datalist id="dataListPokemons">
-        {/* {dataListPokemons.map((item, index) => {
+        {filterState.pokemonListFiltredBySearch.map((item, index) => {
           return (
             <option
               key={index}
@@ -52,7 +43,7 @@ const SearchBar = () => {
               value={item?.namePokemon}
             />
           );
-        })} */}
+        })}
       </datalist>
     </div>
   );

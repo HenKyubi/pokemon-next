@@ -34,9 +34,11 @@ export interface FilterState {
   pokemonListFiltredByType: Array<Pokemon>;
   pokemonListFiltredByColor: Array<Pokemon>;
   pokemonListFiltredByGender: Array<Pokemon>;
+  pokemonListFiltredBySearch: Array<Pokemon>;
   hasFilterType: boolean;
   hasFilterColor: boolean;
   hasFilterGender: boolean;
+  hasFilterSearch: boolean;
   hasActiveFilters: boolean;
 }
 

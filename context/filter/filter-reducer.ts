@@ -4,10 +4,6 @@ type FilterActions =
       type: "filter";
     }
   | {
-      type: "setPokemonListFiltred";
-      payload: { pokemonListFiltred: Array<Pokemon> };
-    }
-  | {
       type: "setPokemonListFiltredByType";
       payload: { pokemonListFiltred: Array<Pokemon> };
     }
@@ -19,91 +15,63 @@ type FilterActions =
       type: "setPokemonListFiltredByGender";
       payload: { pokemonListFiltred: Array<Pokemon> };
     }
+  | {
+      type: "setPokemonListFiltredBySearch";
+      payload: { pokemonListFiltred: Array<Pokemon> };
+    }
   | { type: "setHasFilterType"; payload: { isFiltred: boolean } }
   | { type: "setHasFilterColor"; payload: { isFiltred: boolean } }
   | { type: "setHasFilterGender"; payload: { isFiltred: boolean } }
+  | { type: "setHasFilterSearch"; payload: { isFiltred: boolean } }
   | { type: "validateIfHasActiveFilters" };
 
 export const FilterReducer = (
   state: FilterState,
   action: FilterActions
 ): FilterState => {
-  const filter = () => {
-    if (state.hasFilterType && state.hasFilterColor && state.hasFilterGender) {
-      const newPokemonListFiltred = state.pokemonListFiltredByType.filter(
-        (pokemon) => {
-          return (
-            state.pokemonListFiltredByColor.find(
-              (poke) => poke.idPokemon === pokemon.idPokemon
-            ) &&
-            state.pokemonListFiltredByGender.find(
-              (pok) => pok.idPokemon === pokemon.idPokemon
-            )
+  const filter = (): FilterState => {
+    let newPokemonListFiltred: Array<Pokemon> = [];
+    const pokemonsByType = state.pokemonListFiltredByType;
+    const pokemonsByColor = state.pokemonListFiltredByColor;
+    const pokemonsByGender = state.pokemonListFiltredByGender;
+    const pokemonsBySearch = state.pokemonListFiltredBySearch;
+    if (state.hasFilterType) {
+      newPokemonListFiltred = pokemonsByType;
+    }
+    if (state.hasFilterColor) {
+      if (newPokemonListFiltred.length > 0) {
+        newPokemonListFiltred = newPokemonListFiltred.filter((pokemon) => {
+          return pokemonsByColor.find(
+            (pokemonByColor) => pokemon.idPokemon === pokemonByColor.idPokemon
           );
-        }
-      );
-      return { ...state, pokemonListFiltred: newPokemonListFiltred };
-    } else {
-      if (
-        (state.hasFilterType && state.hasFilterColor) ||
-        (state.hasFilterType && state.hasFilterGender) ||
-        (state.hasFilterColor && state.hasFilterGender)
-      ) {
-        if (state.hasFilterType && state.hasFilterColor) {
-          const newPokemonListFiltred = state.pokemonListFiltredByType.filter(
-            (pokemon) => {
-              return state.pokemonListFiltredByColor.find(
-                (poke) => poke.idPokemon === pokemon.idPokemon
-              );
-            }
-          );
-          return { ...state, pokemonListFiltred: newPokemonListFiltred };
-        } else if (state.hasFilterType && state.hasFilterGender) {
-          const newPokemonListFiltred = state.pokemonListFiltredByType.filter(
-            (pokemon) => {
-              return state.pokemonListFiltredByGender.find(
-                (poke) => poke.idPokemon === pokemon.idPokemon
-              );
-            }
-          );
-          return { ...state, pokemonListFiltred: newPokemonListFiltred };
-        } else {
-          const newPokemonListFiltred = state.pokemonListFiltredByColor.filter(
-            (pokemon) => {
-              return state.pokemonListFiltredByGender.find(
-                (poke) => poke.idPokemon === pokemon.idPokemon
-              );
-            }
-          );
-          return { ...state, pokemonListFiltred: newPokemonListFiltred };
-        }
+        });
       } else {
-        if (
-          state.hasFilterType ||
-          state.hasFilterColor ||
-          state.hasFilterGender
-        ) {
-          if (state.hasFilterType) {
-            return {
-              ...state,
-              pokemonListFiltred: state.pokemonListFiltredByType,
-            };
-          } else if (state.hasFilterColor) {
-            return {
-              ...state,
-              pokemonListFiltred: state.pokemonListFiltredByColor,
-            };
-          } else {
-            return {
-              ...state,
-              pokemonListFiltred: state.pokemonListFiltredByGender,
-            };
-          }
-        } else {
-          return { ...state, pokemonListFiltred: [] };
-        }
+        newPokemonListFiltred = pokemonsByColor;
       }
     }
+    if (state.hasFilterGender) {
+      if (newPokemonListFiltred.length > 0) {
+        newPokemonListFiltred = newPokemonListFiltred.filter((pokemon) => {
+          return pokemonsByGender.find(
+            (pokemonByGender) => pokemon.idPokemon === pokemonByGender.idPokemon
+          );
+        });
+      } else {
+        newPokemonListFiltred = pokemonsByGender;
+      }
+    }
+    if (state.hasFilterSearch) {
+      if (newPokemonListFiltred.length > 0) {
+        newPokemonListFiltred = newPokemonListFiltred.filter((pokemon) => {
+          return pokemonsBySearch.find(
+            (pokemonBySearch) => pokemon.idPokemon === pokemonBySearch.idPokemon
+          );
+        });
+      } else {
+        newPokemonListFiltred = pokemonsBySearch;
+      }
+    }
+    return { ...state, pokemonListFiltred: newPokemonListFiltred };
   };
   switch (action.type) {
     case "filter":
@@ -123,19 +91,25 @@ export const FilterReducer = (
         ...state,
         pokemonListFiltredByGender: action.payload.pokemonListFiltred,
       };
-
+    case "setPokemonListFiltredBySearch":
+      return {
+        ...state,
+        pokemonListFiltredBySearch: action.payload.pokemonListFiltred,
+      };
     case "setHasFilterType":
       return { ...state, hasFilterType: action.payload.isFiltred };
     case "setHasFilterColor":
       return { ...state, hasFilterColor: action.payload.isFiltred };
     case "setHasFilterGender":
       return { ...state, hasFilterGender: action.payload.isFiltred };
-
+    case "setHasFilterSearch":
+      return { ...state, hasFilterSearch: action.payload.isFiltred };
     case "validateIfHasActiveFilters":
       if (
         state.hasFilterType ||
         state.hasFilterColor ||
-        state.hasFilterGender
+        state.hasFilterGender ||
+        state.hasFilterSearch
       ) {
         return { ...state, hasActiveFilters: true };
       } else {

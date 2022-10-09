@@ -24,19 +24,26 @@ const URL = `https://pokeapi.co/api/v2/`;
 export const getInitialPokemons = async (): Promise<Array<Pokemon>> => {
   return new Promise<Array<Pokemon>>(async (resolve, reject) => {
     try {
-      let dataFormatted: string = localStorage.getItem("allPokemons");
+      let dataFormatted: string = localStorage.getItem("pokemonGroups");
       if (typeof dataFormatted !== "string") {
         const responseAllPokemons: ResponseAllPokemons = await axios.get(
           `${URL}pokedex/national/`
         );
-        const pokemonList: Array<Array<Pokemon>> = orderDataOnGroups(
+        const pokemonListByList: Array<Pokemon> = orderDataOnList(
           responseAllPokemons.data.pokemon_entries
         );
-        localStorage.setItem("allPokemons", JSON.stringify(pokemonList));
-        dataFormatted = JSON.stringify(pokemonList);
+        const pokemonListByGroups: Array<Array<Pokemon>> = orderDataOnGroups(
+          responseAllPokemons.data.pokemon_entries
+        );
+        localStorage.setItem("pokemonList", JSON.stringify(pokemonListByList));
+        localStorage.setItem(
+          "pokemonGroups",
+          JSON.stringify(pokemonListByGroups)
+        );
+        dataFormatted = JSON.stringify(pokemonListByGroups);
       }
-      const pokemonList: Array<Array<Pokemon>> = JSON.parse(dataFormatted);
-      resolve(pokemonList[0]);
+      const pokemonGroups: Array<Array<Pokemon>> = JSON.parse(dataFormatted);
+      resolve(pokemonGroups[0]);
     } catch (error) {
       reject(error);
     }
@@ -89,7 +96,7 @@ export const fetchPokemonDetails = (id: number): Promise<PokemonDetails> => {
  */
 export const getNextPokemons = (positionInList: number): Array<Pokemon> => {
   const fullList: Array<Array<Pokemon>> = JSON.parse(
-    localStorage.getItem("allPokemons")
+    localStorage.getItem("pokemonGroups")
   );
   return fullList[positionInList];
 };
@@ -182,22 +189,18 @@ export const getPokemonsByGender = (id: string): Promise<ResponseByGender> => {
 
 export const getPokemonsBySearch = (search: string): Array<Pokemon> => {
   if (search.length > 0) {
-    const a: number = +search;
-    const temporalList: Array<Array<Pokemon>> = JSON.parse(
-      localStorage.getItem("allPokemons")
-    );
-    const temporal = orderDataOnList(temporalList);
-    // const allPokemons
-    if (a > 0) {
-      const lel = temporal.filter((pokemon) =>
+    const listOfAllPokemons = getListOfAllPokemons();
+    const id: number = +search;
+    if (id > 0) {
+      const pokemonListFiltred = listOfAllPokemons.filter((pokemon) =>
         pokemon.idPokemon.toString().includes(search)
       );
-      return lel;
+      return pokemonListFiltred;
     } else {
-      const lel = temporal.filter((pokemon) =>
+      const pokemonListFiltred = listOfAllPokemons.filter((pokemon) =>
         pokemon.namePokemon.includes(search)
       );
-      return lel;
+      return pokemonListFiltred;
     }
   } else {
     return [];
@@ -209,7 +212,7 @@ export const getPokemonsBySearch = (search: string): Array<Pokemon> => {
  * @param {Array<PokemonEntry>} arrayOfObjects Array of PokemonEntry
  * @returns Array of Array of 20 Pokemons
  */
-export const orderDataOnGroups = (
+const orderDataOnGroups = (
   arrayOfObjects: Array<PokemonEntry>
 ): Array<Array<Pokemon>> => {
   //create empy list of pokemons
@@ -243,18 +246,16 @@ export const orderDataOnGroups = (
 };
 
 const orderDataOnList = (
-  pokemonGroup: Array<Array<Pokemon>>
+  pokemonEntryList: Array<PokemonEntry>
 ): Array<Pokemon> => {
-  const pokemonList: Array<Pokemon> = pokemonGroup.reduce(
-    (acc, curVal) => acc.concat(curVal),
-    []
-  );
-  return pokemonList;
+  return pokemonEntryList.map((pokemon) => {
+    return {
+      idPokemon: pokemon.entry_number,
+      namePokemon: pokemon.pokemon_species?.name,
+    };
+  });
 };
 
 const getListOfAllPokemons = (): Array<Pokemon> => {
-  const pokemonGroups: Array<Array<Pokemon>> = JSON.parse(
-    localStorage.getItem("allPokemons")
-  );
-  return orderDataOnList(pokemonGroups);
+  return JSON.parse(localStorage.getItem("pokemonList"));
 };
