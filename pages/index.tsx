@@ -6,17 +6,15 @@ import "bootstrap/dist/css/bootstrap.css";
 import Loading from "../components/loading";
 import Navbar from "../components/navbar";
 import PokemonList from "../components/pokemon-list";
+import PokemonModal from "../components/pokemon-modal";
 import ButtonMorePokemons from "../components/button-more-pokemons";
 import FilterType from "../components/filter-type";
 import FilterColors from "../components/filter-colors";
 import FilterGender from "../components/filter-gender";
 
-// Context
+// Providers
 import { AppProvider } from "../context/app/app-provider";
 import { ModalProvider } from "../context/modal/modal-provider";
-import PokemonModal from "../components/pokemon-modal";
-import { AppContext } from "../context/app/app-context";
-import { FilterContext } from "../context/filter/filter-context";
 import { FilterProvider } from "../context/filter/filter-provider";
 
 export default function Home() {
@@ -30,10 +28,6 @@ export default function Home() {
     height: "100vh",
     width: "100vw",
   };
-
-  // Context
-  const { appState } = useContext(AppContext);
-  const { filterState } = useContext(FilterContext);
 
   return (
     <AppProvider>
@@ -58,7 +52,7 @@ export default function Home() {
                   <PokemonModal />
                   <PokemonList />
                 </ModalProvider>
-                {!appState?.hasActiveFilters && <ButtonMorePokemons />}
+                <ButtonMorePokemons />
               </div>
             </div>
           </div>

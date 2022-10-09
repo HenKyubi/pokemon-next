@@ -15,9 +15,7 @@ const SearchBar = () => {
   // search
   const handleOnChange = (word: string) => {
     const pokemonListFiltred = getPokemonsBySearch(word);
-    pokemonListFiltred.length > 0
-      ? setHasFilterSearch(true)
-      : setHasFilterSearch(false);
+    word.length > 0 ? setHasFilterSearch(true) : setHasFilterSearch(false);
     validateIfHasActiveFilters();
     setPokemonListFiltredBySearch(pokemonListFiltred);
     filter();

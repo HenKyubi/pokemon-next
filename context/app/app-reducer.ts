@@ -2,13 +2,7 @@ import { AppState, Pokemon } from "../../interfaces/interfaces";
 type AppActions =
   | { type: "setPokemonList"; payload: { pokemonList: Array<Pokemon> } }
   | { type: "setPositionOnArray" }
-  | { type: "setHasNextList" }
-  | { type: "setHasTypeFilter"; payload: { isFiltred: boolean } }
-  | { type: "setHasColorFilter"; payload: { isFiltred: boolean } }
-  | { type: "setHasGenderFilter"; payload: { isFiltred: boolean } }
-  | { type: "validateIfHasActiveFilters" };
-
-// | { type: "setModalData"; payload: { pokemonDetails: PokemonDetails } }
+  | { type: "setHasNextList" };
 
 export const AppReducer = (state: AppState, action: AppActions): AppState => {
   switch (action.type) {
@@ -18,24 +12,6 @@ export const AppReducer = (state: AppState, action: AppActions): AppState => {
       return { ...state, positionOnArray: state.positionOnArray + 1 };
     case "setHasNextList":
       return { ...state, hasNextList: !state.hasNextList };
-    // case "setHasTypeFilter":
-    //   return { ...state, hasTypeFilter: action.payload.isFiltred };
-    // case "setHasColorFilter":
-    //   return { ...state, hasColorFilter: action.payload.isFiltred };
-    // case "setHasGenderFilter":
-    //   return { ...state, hasGenderFilter: action.payload.isFiltred };
-    // case "validateIfHasActiveFilters":
-    //   if (
-    //     state.hasTypeFilter ||
-    //     state.hasColorFilter ||
-    //     state.hasGenderFilter
-    //   ) {
-    //     return { ...state, hasActiveFilters: true };
-    //   } else {
-    //     return { ...state, hasActiveFilters: false };
-    //   }
-    // // case: "":
-    // // return {};
     default:
       state;
   }

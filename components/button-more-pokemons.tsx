@@ -1,16 +1,13 @@
 import React, { useContext } from "react";
 import { AppContext } from "../context/app/app-context";
+import { FilterContext } from "../context/filter/filter-context";
 import { Pokemon } from "../interfaces/interfaces";
 import { getNextPokemons } from "../pages/api/index";
 const ButtonMorePokemons = () => {
   const { appState, setHasNextList, setPokemonList, setPositionOnArray } =
     useContext(AppContext);
-  const {
-    pokemonList,
-    positionOnArray,
-    hasNextList,
-    hasActiveFilters: filtred,
-  } = appState;
+  const { filterState } = useContext(FilterContext);
+  const { pokemonList, positionOnArray, hasNextList } = appState;
 
   const getNextList = (): void => {
     const next: Array<Pokemon> = getNextPokemons(positionOnArray);
@@ -22,7 +19,7 @@ const ButtonMorePokemons = () => {
   };
   return (
     <>
-      {hasNextList && !filtred && (
+      {hasNextList && !filterState.hasActiveFilters && (
         <button
           onClick={() => {
             getNextList();
