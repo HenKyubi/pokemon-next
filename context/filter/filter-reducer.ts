@@ -29,58 +29,81 @@ export const FilterReducer = (
   action: FilterActions
 ): FilterState => {
   const filter = () => {
-    if (state.hasFilterType) {
-      if (state.hasFilterColor) {
-        const newPokemonListFiltred = state.pokemonListFiltredByType.filter(
-          (pokemon) => {
-            return state.pokemonListFiltredByColor.find(
+    if (state.hasFilterType && state.hasFilterColor && state.hasFilterGender) {
+      const newPokemonListFiltred = state.pokemonListFiltredByType.filter(
+        (pokemon) => {
+          return (
+            state.pokemonListFiltredByColor.find(
               (poke) => poke.idPokemon === pokemon.idPokemon
-            );
+            ) &&
+            state.pokemonListFiltredByGender.find(
+              (pok) => pok.idPokemon === pokemon.idPokemon
+            )
+          );
+        }
+      );
+      return { ...state, pokemonListFiltred: newPokemonListFiltred };
+    } else {
+      if (
+        (state.hasFilterType && state.hasFilterColor) ||
+        (state.hasFilterType && state.hasFilterGender) ||
+        (state.hasFilterColor && state.hasFilterGender)
+      ) {
+        if (state.hasFilterType && state.hasFilterColor) {
+          const newPokemonListFiltred = state.pokemonListFiltredByType.filter(
+            (pokemon) => {
+              return state.pokemonListFiltredByColor.find(
+                (poke) => poke.idPokemon === pokemon.idPokemon
+              );
+            }
+          );
+          return { ...state, pokemonListFiltred: newPokemonListFiltred };
+        } else if (state.hasFilterType && state.hasFilterGender) {
+          const newPokemonListFiltred = state.pokemonListFiltredByType.filter(
+            (pokemon) => {
+              return state.pokemonListFiltredByGender.find(
+                (poke) => poke.idPokemon === pokemon.idPokemon
+              );
+            }
+          );
+          return { ...state, pokemonListFiltred: newPokemonListFiltred };
+        } else {
+          const newPokemonListFiltred = state.pokemonListFiltredByColor.filter(
+            (pokemon) => {
+              return state.pokemonListFiltredByGender.find(
+                (poke) => poke.idPokemon === pokemon.idPokemon
+              );
+            }
+          );
+          return { ...state, pokemonListFiltred: newPokemonListFiltred };
+        }
+      } else {
+        if (
+          state.hasFilterType ||
+          state.hasFilterColor ||
+          state.hasFilterGender
+        ) {
+          if (state.hasFilterType) {
+            return {
+              ...state,
+              pokemonListFiltred: state.pokemonListFiltredByType,
+            };
+          } else if (state.hasFilterColor) {
+            return {
+              ...state,
+              pokemonListFiltred: state.pokemonListFiltredByColor,
+            };
+          } else {
+            return {
+              ...state,
+              pokemonListFiltred: state.pokemonListFiltredByGender,
+            };
           }
-        );
-        return { ...state, pokemonListFiltred: newPokemonListFiltred };
-      }
-      if (state.hasFilterGender) {
-        const newPokemonListFiltred = state.pokemonListFiltredByType.filter(
-          (pokemon) => {
-            return state.pokemonListFiltredByGender.find(
-              (poke) => poke.idPokemon === pokemon.idPokemon
-            );
-          }
-        );
-        return { ...state, pokemonListFiltred: newPokemonListFiltred };
-      }
-      if (state.hasFilterColor && state.hasFilterGender) {
-        const newPokemonListFiltred = state.pokemonListFiltredByType.filter(
-          (pokemon) => {
-            return state.pokemonListFiltred.find(
-              (poke) => poke.idPokemon === pokemon.idPokemon
-            );
-          }
-        );
-        return { ...state, pokemonListFiltred: newPokemonListFiltred };
-      }
-      if (!state.hasFilterColor && !state.hasFilterGender) {
-        return { ...state, pokemonListFiltred: state.pokemonListFiltredByType };
+        } else {
+          return { ...state, pokemonListFiltred: [] };
+        }
       }
     }
-    if (state.hasFilterColor) {
-      if (state.hasFilterGender) {
-        const newPokemonListFiltred = state.pokemonListFiltredByColor.filter(
-          (pokemon) => {
-            return state.pokemonListFiltredByGender.find(
-              (poke) => poke.idPokemon === pokemon.idPokemon
-            );
-          }
-        );
-        return { ...state, pokemonListFiltred: newPokemonListFiltred };
-      }
-      return { ...state, pokemonListFiltred: state.pokemonListFiltredByColor };
-    }
-    if (state.hasFilterGender) {
-      return { ...state, pokemonListFiltred: state.pokemonListFiltredByGender };
-    }
-    return state;
   };
   switch (action.type) {
     case "filter":
