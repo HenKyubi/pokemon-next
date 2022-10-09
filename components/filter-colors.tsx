@@ -4,7 +4,7 @@ import { FilterContext } from "../context/filter/filter-context";
 import { Pokemon } from "../interfaces/interfaces";
 import { PokemonSpecy } from "../interfaces/response-by-color";
 import { Result } from "../interfaces/response-color-names";
-import { getColorNames, getPokemonsByColor } from "../pages/api/index";
+import { getNamesFilterColor, getPokemonsByColor } from "../pages/api/index";
 // import classNames from "classnames";
 
 const FilterColors = () => {
@@ -23,7 +23,7 @@ const FilterColors = () => {
 
   const fetchFilterNames = useCallback(async () => {
     try {
-      const responseColorNames = await getColorNames();
+      const responseColorNames = await getNamesFilterColor();
       setResultColorNames(responseColorNames.data.results);
       setCheckedState(new Array(resultColorNames.length).fill(false));
     } catch (err) {

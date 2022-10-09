@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import { AppContext } from "../context/app/app-context";
 import { PokemonSpeciesDetail } from "../interfaces/response-by-gender";
 import { Pokemon } from "../interfaces/interfaces";
-import { getFilterGenderNames, getPokemonsByGender } from "../pages/api/index";
+import { getNamesFilterGender, getPokemonsByGender } from "../pages/api/index";
 import {
   ResponseGenderNames,
   Result,
@@ -26,7 +26,7 @@ const FilterGender = () => {
   const fetchFilterNames = useCallback(async () => {
     try {
       const responseGenderNames: ResponseGenderNames =
-        await getFilterGenderNames();
+        await getNamesFilterGender();
       setResultGenderNames(responseGenderNames.data.results);
       setCheckedState(new Array(resultGenderNames.length).fill(false));
     } catch (err) {

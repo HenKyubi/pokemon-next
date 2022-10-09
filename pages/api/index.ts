@@ -17,6 +17,33 @@ import { ResponseByGender } from "../../interfaces/response-by-gender";
 const URL = `https://pokeapi.co/api/v2/`;
 
 /**
+ * This function consults the API, formats the query in an object (pokemon list),
+ * stores it in LocalStorage and returns the first position of the object
+ * @returns first list of 20 pokemon
+ */
+export const getInitialPokemons = async (): Promise<Array<Pokemon>> => {
+  return new Promise<Array<Pokemon>>(async (resolve, reject) => {
+    try {
+      let dataFormatted: string = localStorage.getItem("allPokemons");
+      if (typeof dataFormatted !== "string") {
+        const responseAllPokemons: ResponseAllPokemons = await axios.get(
+          `${URL}pokedex/national/`
+        );
+        const pokemonList: Array<Array<Pokemon>> = orderDataOnGroups(
+          responseAllPokemons.data.pokemon_entries
+        );
+        localStorage.setItem("allPokemons", JSON.stringify(pokemonList));
+        dataFormatted = JSON.stringify(pokemonList);
+      }
+      const pokemonList: Array<Array<Pokemon>> = JSON.parse(dataFormatted);
+      resolve(pokemonList[0]);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+/**
  * This function is to get the information for one pokemon
  * @param {String | Number} id The id Pokemon
  * @returns The Pokemon information about description and species
@@ -56,33 +83,6 @@ export const fetchPokemonDetails = (id: number): Promise<PokemonDetails> => {
 };
 
 /**
- * This function consults the API, formats the query in an object (pokemon list),
- * stores it in LocalStorage and returns the first position of the object
- * @returns first list of 20 pokemon
- */
-export const getInitialPokemons = async (): Promise<Array<Pokemon>> => {
-  return new Promise<Array<Pokemon>>(async (resolve, reject) => {
-    try {
-      let dataFormatted: string = localStorage.getItem("allPokemons");
-      if (typeof dataFormatted !== "string") {
-        const responseAllPokemons: ResponseAllPokemons = await axios.get(
-          `${URL}pokedex/national/`
-        );
-        const pokemonList: Array<Array<Pokemon>> = reOrderFormatted(
-          responseAllPokemons.data.pokemon_entries
-        );
-        localStorage.setItem("allPokemons", JSON.stringify(pokemonList));
-        dataFormatted = JSON.stringify(pokemonList);
-      }
-      const pokemonList: Array<Array<Pokemon>> = JSON.parse(dataFormatted);
-      resolve(pokemonList[0]);
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-
-/**
  * gets the information in LocalStorage, formats it and returns the following list of pokemon
  * @param {Array} positionInList Actual position of the list
  * @returns next list of pokemon
@@ -98,7 +98,7 @@ export const getNextPokemons = (positionInList: number): Array<Pokemon> => {
  * get the object in on the type endpoint
  * @returns list of pokemons for type
  */
-export const getFilterTypeNames = (): Promise<ResponseTypesNames> => {
+export const getNamesFilterType = (): Promise<ResponseTypesNames> => {
   return new Promise<ResponseTypesNames>(async (resolve, reject) => {
     try {
       const responseTypesNames: ResponseTypesNames = await axios.get(
@@ -111,11 +111,24 @@ export const getFilterTypeNames = (): Promise<ResponseTypesNames> => {
   });
 };
 
+export const getPokemonsByType = (id: string): Promise<ResponseByType> => {
+  return new Promise<ResponseByType>(async (resolve, reject) => {
+    try {
+      const responseByType: ResponseByType = await axios.get(
+        `${URL}type/${id}`
+      );
+      resolve(responseByType);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 /**
  * get the object in on the color endpoint
  * @returns list of pokemons for color
  */
-export const getColorNames = (): Promise<ResponseColorNames> => {
+export const getNamesFilterColor = (): Promise<ResponseColorNames> => {
   return new Promise(async (resolve, reject) => {
     try {
       const responseColorNames: ResponseColorNames = await axios.get(
@@ -128,11 +141,24 @@ export const getColorNames = (): Promise<ResponseColorNames> => {
   });
 };
 
+export const getPokemonsByColor = (id: string): Promise<ResponseByColor> => {
+  return new Promise<ResponseByColor>(async (resolve, reject) => {
+    try {
+      const responseByColor: ResponseByColor = await axios.get(
+        `${URL}pokemon-color/${id}`
+      );
+      resolve(responseByColor);
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 /**
  * get the object in on the gender endpoint
  * @returns list of pokemons for gender
  */
-export const getFilterGenderNames = (): Promise<ResponseGenderNames> => {
+export const getNamesFilterGender = (): Promise<ResponseGenderNames> => {
   return new Promise(async (resolve, reject) => {
     try {
       const responseGenderNames = await axios.get(`${URL}gender/`);
@@ -143,27 +169,39 @@ export const getFilterGenderNames = (): Promise<ResponseGenderNames> => {
   });
 };
 
-/**
- * get two lists data and filter, data is filtered with the filter information
- * @param {Arrray} data
- * @param {Array} filter
- * @returns new list of pokemons filtered
- */
-export const getFilterPokemons = (data = [], filter = []) => {
+export const getPokemonsByGender = (id: string): Promise<ResponseByGender> => {
   return new Promise(async (resolve, reject) => {
     try {
-      let arr = [];
-      for (let i = 0; i < filter.length; i++) {
-        const newFilter = data.filter((pokemon) =>
-          pokemon.data.types.filter((type) => type.type.name === filter[i])
-        );
-        arr.push(newFilter);
-      }
-      resolve(arr);
-    } catch (error) {
-      reject(error);
+      const responseByGender = await axios.get(`${URL}gender/${id}`);
+      resolve(responseByGender);
+    } catch (err) {
+      reject(err);
     }
   });
+};
+
+export const getPokemonsBySearch = (search: string): Array<Pokemon> => {
+  if (search.length > 0) {
+    const a: number = +search;
+    const temporalList: Array<Array<Pokemon>> = JSON.parse(
+      localStorage.getItem("allPokemons")
+    );
+    const temporal = orderDataOnList(temporalList);
+    // const allPokemons
+    if (a > 0) {
+      const lel = temporal.filter((pokemon) =>
+        pokemon.idPokemon.toString().includes(search)
+      );
+      return lel;
+    } else {
+      const lel = temporal.filter((pokemon) =>
+        pokemon.namePokemon.includes(search)
+      );
+      return lel;
+    }
+  } else {
+    return [];
+  }
 };
 
 /**
@@ -171,7 +209,7 @@ export const getFilterPokemons = (data = [], filter = []) => {
  * @param {Array<PokemonEntry>} arrayOfObjects Array of PokemonEntry
  * @returns Array of Array of 20 Pokemons
  */
-export const reOrderFormatted = (
+export const orderDataOnGroups = (
   arrayOfObjects: Array<PokemonEntry>
 ): Array<Array<Pokemon>> => {
   //create empy list of pokemons
@@ -201,82 +239,22 @@ export const reOrderFormatted = (
       }
     }
   }
-
   return pokemonList;
 };
 
-export const getPokemonsByType = (id: string): Promise<ResponseByType> => {
-  return new Promise<ResponseByType>(async (resolve, reject) => {
-    try {
-      const responseByType: ResponseByType = await axios.get(
-        `${URL}type/${id}`
-      );
-      resolve(responseByType);
-    } catch (err) {
-      reject(err);
-    }
-  });
+const orderDataOnList = (
+  pokemonGroup: Array<Array<Pokemon>>
+): Array<Pokemon> => {
+  const pokemonList: Array<Pokemon> = pokemonGroup.reduce(
+    (acc, curVal) => acc.concat(curVal),
+    []
+  );
+  return pokemonList;
 };
 
-export const getPokemonsByColor = (id: string): Promise<ResponseByColor> => {
-  return new Promise<ResponseByColor>(async (resolve, reject) => {
-    try {
-      const responseByColor: ResponseByColor = await axios.get(
-        `${URL}pokemon-color/${id}`
-      );
-      resolve(responseByColor);
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
-
-export const getPokemonsByGender = (id: string): Promise<ResponseByGender> => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const responseByGender = await axios.get(`${URL}gender/${id}`);
-      resolve(responseByGender);
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
-
-export const removeRepeat = (array = []) => {
-  return array.filter((item, index) => array.indexOf(item) === index);
-};
-
-export const doFilter = (filterType, filterColors, filterGender) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let pokemonList = [];
-      if (filterType.length > 0) pokemonList.push(...filterType);
-      if (filterColors.length > 0) pokemonList.push(...filterColors);
-      if (filterGender.length > 0) pokemonList.push(...filterGender);
-      pokemonList = removeRepeat(pokemonList);
-      const dataFormatted = JSON.parse(localStorage.getItem("allPokemons"));
-      let listOrder = [];
-      for (let index = 0; index < dataFormatted.length; index++) {
-        const element = dataFormatted[index];
-        for (let index = 0; index < element.length; index++) {
-          const pokemonData = element[index];
-          listOrder.push(pokemonData);
-        }
-      }
-      let searchList = [];
-      for (let i = 0; i < pokemonList.length; i++) {
-        const pokemonsFiltred = listOrder.filter((item) =>
-          item.namePokemon.includes(pokemonList[i])
-        );
-        if (pokemonsFiltred.length > 0) searchList.push(...pokemonsFiltred);
-      }
-      searchList = removeRepeat(searchList);
-      pokemonList = await reOrderFormatted(searchList);
-      pokemonList =
-        pokemonList.length < searchList.length ? searchList : pokemonList;
-      resolve(pokemonList);
-    } catch (err) {
-      reject(err);
-    }
-  });
+const getListOfAllPokemons = (): Array<Pokemon> => {
+  const pokemonGroups: Array<Array<Pokemon>> = JSON.parse(
+    localStorage.getItem("allPokemons")
+  );
+  return orderDataOnList(pokemonGroups);
 };

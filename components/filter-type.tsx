@@ -2,13 +2,12 @@ import React, { useState, useEffect, useContext, useCallback } from "react";
 import { PokemonResult } from "../interfaces/response-by-type";
 import { ResponseTypesNames, Result } from "../interfaces/response-types-names";
 import { Pokemon } from "../interfaces/interfaces";
-import { getFilterTypeNames, getPokemonsByType } from "../pages/api/index";
+import { getNamesFilterType, getPokemonsByType } from "../pages/api/index";
 import { FilterContext } from "../context/filter/filter-context";
 
 const FilterType = () => {
   // Context
   const {
-    filterState,
     filter,
     setPokemonListFiltredByType,
     setHasFilterType,
@@ -20,7 +19,7 @@ const FilterType = () => {
 
   const fetchFilterNames = useCallback(async () => {
     try {
-      const responseTypesNames: ResponseTypesNames = await getFilterTypeNames();
+      const responseTypesNames: ResponseTypesNames = await getNamesFilterType();
       setResultTypesNames(responseTypesNames.data.results);
       setCheckedState(new Array(resultTypesNames.length).fill(false));
     } catch (err) {
@@ -109,11 +108,6 @@ const FilterType = () => {
       validateIfHasActiveFilters();
       setPokemonListFiltredByType([]);
       filter();
-      // if (filterState.hasActiveFilters) {
-      //   filter();
-      // } else {
-      //   setPokemonListFiltredByType([]);
-      // }
     }
   };
 

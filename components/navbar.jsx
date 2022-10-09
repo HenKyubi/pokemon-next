@@ -2,6 +2,7 @@ import React from "react";
 
 import Image from "next/image";
 import Logo from "../public/images/pokemon-logo.png";
+import SearchBar from "./searchbar";
 
 const Navbar = () => {
   const styles = {
@@ -17,6 +18,7 @@ const Navbar = () => {
           alt="navbar logo"
           style={styles.nav}
         /> */}
+        <SearchBar/>
       </div>
     </nav>
   );
