@@ -5,6 +5,7 @@ type ModalContextProps = {
   modalState: ModalState;
   toggleModal: () => void;
   setPokemonDataDetails: (pokemonDataDetails: PokemonDetails) => void;
+  resetModalContext: () => void;
 };
 
 export const ModalContext = createContext<ModalContextProps>(

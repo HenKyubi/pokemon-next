@@ -7,6 +7,9 @@ type ModalAction =
     }
   | {
       type: "toggleModal";
+    }
+  | {
+      type: "resetModalContext";
     };
 
 export const ModalReducer = (
@@ -17,14 +20,18 @@ export const ModalReducer = (
     case "toggleModal":
       return {
         ...state,
-        modalOpen: !state.modalOpen
+        modalOpen: !state.modalOpen,
       };
     case "setPokemonDataDetails":
       return {
         ...state,
-        pokemonDataDetails: action.payload.pokemonDetailsData
-      }
-
+        pokemonDataDetails: action.payload.pokemonDetailsData,
+      };
+    case "resetModalContext":
+      return {
+        modalOpen: false,
+        pokemonDataDetails: undefined,
+      };
     default:
       return state;
   }

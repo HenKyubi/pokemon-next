@@ -16,6 +16,7 @@ import FilterGender from "../components/filter-gender";
 import { AppProvider } from "../context/app/app-provider";
 import { ModalProvider } from "../context/modal/modal-provider";
 import { FilterProvider } from "../context/filter/filter-provider";
+import ButtonReset from "../components/button-reset";
 
 export default function Home() {
   // const switchLoading = () => {
@@ -32,31 +33,32 @@ export default function Home() {
   return (
     <AppProvider>
       <FilterProvider>
-        <Head>
-          <title>Pokedex NextJs</title>
-          <meta name="description" content="Next App" />
-          <link rel="icon" href="/favicon.png" />
-        </Head>
-        {/* {loading && <Loading />} */}
-        <div className="container" style={styles}>
-          <Navbar />
-          <div className="row m-0 p-0 h-100 w-100">
-            <div className="col-3  m-0 p-0 h-100">
-              <FilterType />
-              <FilterColors />
-              <FilterGender />
-            </div>
-            <div className="col-9 m-0 p-0 ">
-              <div className="row m-0 p-0 w-100">
-                <ModalProvider>
+        <ModalProvider>
+          <Head>
+            <title>Pokedex NextJs</title>
+            <meta name="description" content="Next App" />
+            <link rel="icon" href="/favicon.png" />
+          </Head>
+          {/* {loading && <Loading />} */}
+          <div className="container" style={styles}>
+            <Navbar />
+            <div className="row m-0 p-0 h-100 w-100">
+              <div className="col-3  m-0 p-0 h-100">
+                <FilterType />
+                <FilterColors />
+                <FilterGender />
+                <ButtonReset />
+              </div>
+              <div className="col-9 m-0 p-0 ">
+                <div className="row m-0 p-0 w-100">
                   <PokemonModal />
                   <PokemonList />
-                </ModalProvider>
-                <ButtonMorePokemons />
+                  <ButtonMorePokemons />
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </ModalProvider>
       </FilterProvider>
     </AppProvider>
   );

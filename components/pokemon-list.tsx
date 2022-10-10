@@ -1,10 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useCallback } from "react";
 
 // Interfaces
 import { Pokemon } from "../interfaces/interfaces";
 
 // API
-import { getInitialPokemons } from "../pages/api/index";
+import { fetchAllPokemons } from "../pages/api/index";
 
 //Lotties
 import Lottie from "react-lottie";
@@ -27,19 +27,14 @@ const PokemonList = (): JSX.Element => {
   };
 
   //Context
-  const { appState, setPokemonList } = useContext(AppContext);
+  const { appState, getInitialGroupOfPokemons } = useContext(AppContext);
   const { filterState } = useContext(FilterContext);
 
   const { pokemonList } = appState;
 
-  const fetchInitialPokemons = async () => {
-    try {
-      const initialListOfPokemons: Array<Pokemon> = await getInitialPokemons();
-      setPokemonList(initialListOfPokemons);
-    } catch (err) {
-      console.log("err fetchInitialPokemons", err);
-    }
-  };
+  const fetchInitialPokemons = useCallback(() => {
+    getInitialGroupOfPokemons();
+  }, [getInitialGroupOfPokemons]);
 
   useEffect(() => {
     fetchInitialPokemons();

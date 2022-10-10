@@ -21,33 +21,56 @@ const URL = `https://pokeapi.co/api/v2/`;
  * stores it in LocalStorage and returns the first position of the object
  * @returns first list of 20 pokemon
  */
-export const getInitialPokemons = async (): Promise<Array<Pokemon>> => {
+const fetchAllPokemons = async () => {
   return new Promise<Array<Pokemon>>(async (resolve, reject) => {
     try {
-      let dataFormatted: string = localStorage.getItem("pokemonGroups");
-      if (typeof dataFormatted !== "string") {
-        const responseAllPokemons: ResponseAllPokemons = await axios.get(
-          `${URL}pokedex/national/`
-        );
-        const pokemonListByList: Array<Pokemon> = orderDataOnList(
-          responseAllPokemons.data.pokemon_entries
-        );
-        const pokemonListByGroups: Array<Array<Pokemon>> = orderDataOnGroups(
-          responseAllPokemons.data.pokemon_entries
-        );
-        localStorage.setItem("pokemonList", JSON.stringify(pokemonListByList));
-        localStorage.setItem(
-          "pokemonGroups",
-          JSON.stringify(pokemonListByGroups)
-        );
-        dataFormatted = JSON.stringify(pokemonListByGroups);
-      }
-      const pokemonGroups: Array<Array<Pokemon>> = JSON.parse(dataFormatted);
-      resolve(pokemonGroups[0]);
+      const responseAllPokemons: ResponseAllPokemons = await axios.get(
+        `${URL}pokedex/national/`
+      );
+      const pokemonListByList: Array<Pokemon> = orderDataOnList(
+        responseAllPokemons.data.pokemon_entries
+      );
+      const pokemonListByGroups: Array<Array<Pokemon>> = orderDataOnGroups(
+        responseAllPokemons.data.pokemon_entries
+      );
+      localStorage.setItem("pokemonList", JSON.stringify(pokemonListByList));
+      localStorage.setItem(
+        "pokemonGroups",
+        JSON.stringify(pokemonListByGroups)
+      );
+      resolve(pokemonListByGroups[0]);
+      // let dataFormatted: string = localStorage.getItem("pokemonGroups");
+      // if (typeof dataFormatted !== "string") {
+      //   const responseAllPokemons: ResponseAllPokemons = await axios.get(
+      //     `${URL}pokedex/national/`
+      //   );
+      //   const pokemonListByList: Array<Pokemon> = orderDataOnList(
+      //     responseAllPokemons.data.pokemon_entries
+      //   );
+      //   const pokemonListByGroups: Array<Array<Pokemon>> = orderDataOnGroups(
+      //     responseAllPokemons.data.pokemon_entries
+      //   );
+      //   localStorage.setItem("pokemonList", JSON.stringify(pokemonListByList));
+      //   localStorage.setItem(
+      //     "pokemonGroups",
+      //     JSON.stringify(pokemonListByGroups)
+      //   );
+      //   dataFormatted = JSON.stringify(pokemonListByGroups);
+      // }
+      // const pokemonGroups: Array<Array<Pokemon>> = JSON.parse(dataFormatted);
+      // resolve(pokemonGroups[0]);
     } catch (error) {
       reject(error);
     }
   });
+};
+
+export const getInitialGroupOfPokemons = (): Array<Pokemon> => {
+  // console.log(localStorage.getItem("1651asdad"));
+  if (!localStorage.getItem("pokemonGroups")) {
+    fetchAllPokemons();
+  }
+  return JSON.parse(localStorage.getItem("pokemonGroups"))[0];
 };
 
 /**

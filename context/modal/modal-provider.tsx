@@ -25,9 +25,18 @@ export const ModalProvider = ({ children }: Props) => {
     });
   };
 
+  const resetModalContext = () => {
+    dispatch({ type: "resetModalContext" });
+  };
+
   return (
     <ModalContext.Provider
-      value={{ modalState, toggleModal, setPokemonDataDetails }}
+      value={{
+        modalState,
+        toggleModal,
+        setPokemonDataDetails,
+        resetModalContext: resetModalContext,
+      }}
     >
       {children}
     </ModalContext.Provider>

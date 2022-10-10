@@ -14,6 +14,9 @@ interface Props {
 }
 export const AppProvider = ({ children }: Props) => {
   const [appState, dispatch] = useReducer(AppReducer, INITIAL_STATE);
+  const getInitialGroupOfPokemons = () => {
+    dispatch({ type: "getInitialGroupOfPokemons" });
+  };
   const setPokemonList = (pokemonList: Array<Pokemon>) => {
     dispatch({ type: "setPokemonList", payload: { pokemonList } });
   };
@@ -23,13 +26,18 @@ export const AppProvider = ({ children }: Props) => {
   const setHasNextList = () => {
     dispatch({ type: "setHasNextList" });
   };
+  const resetAppContext = () => {
+    dispatch({ type: "resetAppContext" });
+  };
   return (
     <AppContext.Provider
       value={{
         appState,
+        getInitialGroupOfPokemons: getInitialGroupOfPokemons,
         setPokemonList,
         setPositionOnArray,
         setHasNextList,
+        resetAppContext: resetAppContext,
       }}
     >
       {children}

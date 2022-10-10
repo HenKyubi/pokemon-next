@@ -23,7 +23,10 @@ type FilterActions =
   | { type: "setHasFilterColor"; payload: { isFiltred: boolean } }
   | { type: "setHasFilterGender"; payload: { isFiltred: boolean } }
   | { type: "setHasFilterSearch"; payload: { isFiltred: boolean } }
-  | { type: "validateIfHasActiveFilters" };
+  | { type: "validateIfHasActiveFilters" }
+  | {
+      type: "resetFilterContext";
+    };
 
 export const FilterReducer = (
   state: FilterState,
@@ -115,6 +118,19 @@ export const FilterReducer = (
       } else {
         return { ...state, hasActiveFilters: false };
       }
+    case "resetFilterContext":
+      return {
+        pokemonListFiltred: [],
+        pokemonListFiltredByType: [],
+        pokemonListFiltredByColor: [],
+        pokemonListFiltredByGender: [],
+        pokemonListFiltredBySearch: [],
+        hasFilterType: false,
+        hasFilterColor: false,
+        hasFilterGender: false,
+        hasFilterSearch: false,
+        hasActiveFilters: false,
+      };
     default:
       state;
   }

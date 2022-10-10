@@ -13,6 +13,7 @@ type FilterContextProps = {
   setHasFilterGender: (isFiltred: boolean) => void;
   setHasFilterSearch: (isFiltred: boolean) => void;
   validateIfHasActiveFilters: () => void;
+  resetFilterContext: () => void;
 };
 
 export const FilterContext = createContext<FilterContextProps>(

@@ -69,6 +69,9 @@ export const FilterProvider = ({ children }: Props) => {
   const validateIfHasActiveFilters = () => {
     dispatch({ type: "validateIfHasActiveFilters" });
   };
+  const resetFilterContext = () => {
+    dispatch({ type: "resetFilterContext" });
+  };
   return (
     <FilterContext.Provider
       value={{
@@ -83,6 +86,7 @@ export const FilterProvider = ({ children }: Props) => {
         setHasFilterGender: setHasFilterGender,
         setHasFilterSearch: setHasFilterSearch,
         validateIfHasActiveFilters: validateIfHasActiveFilters,
+        resetFilterContext: resetFilterContext,
       }}
     >
       {children}
